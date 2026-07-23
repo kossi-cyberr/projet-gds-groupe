@@ -16,7 +16,6 @@ export class InscireComponent {
   constructor(private entrepriseService: EnServiceService
     ,private userService : UserService,
     private router:Router){}
-
   entrepriseDto: EntrepriseDto = {};
   adresse: AdresseDto = {};
   errorsMsg: Array<string> = [];
