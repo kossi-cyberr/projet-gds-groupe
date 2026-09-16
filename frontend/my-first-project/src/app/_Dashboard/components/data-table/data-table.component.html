@@ -1,0 +1,124 @@
+<!-- Barre d'outils : recherche -->
+<div class="mb-3 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+  <label class="input input-bordered input-sm flex w-full items-center gap-2 sm:max-w-xs">
+    <i-lucide name="search" size="16" class="opacity-50"></i-lucide>
+    <input type="text" class="grow" placeholder="Rechercher…" [(ngModel)]="recherche"
+           (ngModelChange)="appliquerFiltre()" aria-label="Rechercher dans le tableau">
+  </label>
+  <p class="mb-0 text-sm text-base-content/60">
+    {{ totalFiltre }} résultat{{ totalFiltre > 1 ? 's' : '' }}
+  </p>
+</div>
+
+<div class="card bg-base-100 shadow-sm">
+  <div class="overflow-x-auto">
+    <table class="table table-sm">
+      <thead>
+        <tr>
+          <th *ngFor="let colonne of colonnes"
+              [class.text-right]="colonne.droite"
+              [class.w-px]="colonne.actions">
+            <button type="button" *ngIf="colonne.triable" class="inline-flex items-center gap-1 font-semibold hover:text-primary"
+                    (click)="trier(colonne)">
+              {{ libelleTraduit(colonne) }}
+              <i-lucide *ngIf="colonneTri === colonne.cle && directionTri === 'asc'" name="chevron-up" size="14"></i-lucide>
+              <i-lucide *ngIf="colonneTri === colonne.cle && directionTri === 'desc'" name="chevron-down" size="14"></i-lucide>
+              <i-lucide *ngIf="colonneTri !== colonne.cle" name="chevrons-up-down" size="14" class="opacity-40"></i-lucide>
+            </button>
+            <ng-container *ngIf="!colonne.triable">{{ libelleTraduit(colonne) }}</ng-container>
+          </th>
+        </tr>
+      </thead>
+
+      <!-- Chargement : squelettes -->
+      <tbody *ngIf="chargement">
+        <tr *ngFor="let s of [1, 2, 3, 4, 5]">
+          <td *ngFor="let colonne of colonnes">
+            <div class="skeleton h-4 w-full"></div>
+          </td>
+        </tr>
+      </tbody>
+
+      <!-- Erreur -->
+      <tbody *ngIf="!chargement && erreur">
+        <tr>
+          <td [attr.colspan]="colonnes.length">
+            <div class="flex flex-col items-center gap-3 py-10 text-center">
+              <i-lucide name="alert-triangle" size="36" class="text-error"></i-lucide>
+              <p class="mb-0 text-sm">{{ erreurMessage }}</p>
+              <button type="button" class="btn btn-outline btn-sm" (click)="reessayer.emit()">
+                Réessayer
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+
+      <!-- Vide -->
+      <tbody *ngIf="!chargement && !erreur && totalFiltre === 0">
+        <tr>
+          <td [attr.colspan]="colonnes.length">
+            <div class="flex flex-col items-center gap-3 py-10 text-center">
+              <i-lucide name="inbox" size="36" class="text-base-content/30"></i-lucide>
+              <p class="mb-0 text-sm text-base-content/60">Aucun {{ entite }} trouvé.</p>
+              <button type="button" class="btn btn-primary btn-sm" (click)="creer.emit()">
+                <i-lucide name="plus" size="16"></i-lucide>
+                Nouveau
+              </button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+
+      <!-- Données -->
+      <tbody *ngIf="!chargement && !erreur && lignesPage.length > 0">
+        <tr *ngFor="let ligne of lignesPage" class="hover:bg-base-200/60">
+          <td *ngFor="let colonne of colonnes"
+              [class.text-right]="colonne.droite"
+              [class.font-medium]="colonne === colonnes[0]">
+            <ng-container *ngIf="!colonne.actions">{{ afficher(ligne, colonne) }}</ng-container>
+            <ng-container *ngIf="colonne.actions">
+              <div class="flex justify-end gap-1">
+                <button *ngIf="actionDisponible('details')" type="button" class="btn btn-ghost btn-xs btn-circle" title="Détails"
+                        (click)="emettreAction('details', ligne)">
+                  <i-lucide name="eye" size="15"></i-lucide>
+                </button>
+                <button *ngIf="actionDisponible('modifier')" type="button" class="btn btn-ghost btn-xs btn-circle" title="Modifier"
+                        (click)="emettreAction('modifier', ligne)">
+                  <i-lucide name="pencil" size="15"></i-lucide>
+                </button>
+                <button *ngIf="actionDisponible('supprimer')" type="button" class="btn btn-ghost btn-xs btn-circle text-error" title="Supprimer"
+                        (click)="emettreAction('supprimer', ligne)">
+                  <i-lucide name="trash-2" size="15"></i-lucide>
+                </button>
+              </div>
+            </ng-container>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination -->
+  <div class="flex flex-col items-center justify-between gap-2 border-t border-base-300 px-4 py-3 sm:flex-row"
+       *ngIf="!chargement && !erreur && totalFiltre > 0">
+    <div class="flex items-center gap-2 text-sm">
+      <span class="text-base-content/60">Lignes par page</span>
+      <select class="select select-bordered select-xs" [(ngModel)]="taille" aria-label="Lignes par page">
+        <option *ngFor="let t of tailles" [ngValue]="t">{{ t }}</option>
+      </select>
+      <span class="text-base-content/60">
+        {{ (page - 1) * taille + 1 }}–{{ finPage }} sur {{ totalFiltre }}
+      </span>
+    </div>
+    <div class="join">
+      <button type="button" class="btn join-item btn-xs" [disabled]="page === 1" (click)="allerPremierePage()" aria-label="Première page">«</button>
+      <button type="button" class="btn join-item btn-xs" [disabled]="page === 1" (click)="pagePrecedente()" aria-label="Page précédente">‹</button>
+      <button type="button" class="btn join-item btn-xs"
+              *ngFor="let p of pagesVisibles" [class.btn-active]="p === page"
+              (click)="changerPage(p)">{{ p }}</button>
+      <button type="button" class="btn join-item btn-xs" [disabled]="page === pages.length" (click)="pageSuivante()" aria-label="Page suivante">›</button>
+      <button type="button" class="btn join-item btn-xs" [disabled]="page === pages.length" (click)="allerDernierePage()" aria-label="Dernière page">»</button>
+    </div>
+  </div>
+</div>

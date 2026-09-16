@@ -1,23 +1,31 @@
-<div class="col">
-  <div class="row m-3">
-    <div class="col-md-8 p-0">
-      <h1>Liste des clients</h1>
-    </div>
-    <div class="col-md-4 text-right">
-      <app-button-action (clickEvent)="noveauClient()"></app-button-action>
-    </div>
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <div>
+    <h1 class="page-title mb-0">Clients</h1>
+    <p class="helper-text mb-0">Gérez les clients de votre entreprise</p>
   </div>
-  <div class="col m-3">
-    <div class="alert alert-danger" *ngIf="errorMsg">
-      {{ errorMsg }}
-    </div>
-    <p class="text-muted" *ngIf="chargement">Chargement…</p>
-    <p class="text-muted" *ngIf="!chargement && listClient.length === 0">Aucun client enregistré.</p>
-    <app-details-cl-frs
-      *ngFor="let client of listClient"
-      [origin]="'client'"
-      [partenaire]="client"
-      (suppressionResult)="surSuppression($event)"
-    ></app-details-cl-frs>
-  </div>
+  <button type="button" class="btn btn-primary btn-sm" (click)="noveauClient()">
+    <i-lucide name="plus" size="16"></i-lucide>
+    Nouveau client
+  </button>
 </div>
+
+<app-confirm-dialog
+  [ouvert]="suppressionOuverte"
+  titre="Supprimer le client"
+  [message]="messageSuppression"
+  libelleConfirmer="Supprimer"
+  (confirme)="confirmerSuppression()"
+  (annule)="annulerSuppression()">
+</app-confirm-dialog>
+
+<app-data-table
+  entite="client"
+  [colonnes]="colonnes"
+  [lignes]="listClient"
+  [chargement]="chargement"
+  [erreur]="errorMsg !== ''"
+  [erreurMessage]="errorMsg || 'Erreur lors du chargement des clients.'"
+  (creer)="noveauClient()"
+  (reessayer)="findAllClients()"
+  (action)="surAction($event)">
+</app-data-table>

@@ -2,6 +2,12 @@ import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { Category } from 'src/app/Models/Category';
 import { CategoryService } from 'src/app/services/category.service';
+import { ColonneTable } from 'src/app/_Dashboard/components/data-table/data-table.component';
+
+interface ActionTable {
+  type: 'details' | 'modifier' | 'supprimer';
+  ligne: Category;
+}
 
 @Component({
   selector: 'app-categories',
@@ -11,9 +17,19 @@ import { CategoryService } from 'src/app/services/category.service';
 export class CategoriesComponent implements OnInit {
 
   listCategory: Category[] = [];
-  selectedCategoryId! : number;
-  categoryName = "";
-  errorMsg  = "";
+  chargement = true;
+  errorMsg = '';
+
+  colonnes: ColonneTable<Category>[] = [
+    { cle: 'codeCategory', libelle: 'col.code', triable: true },
+    { cle: 'designation', libelle: 'col.designation', triable: true },
+    { cle: 'actions', libelle: 'col.actions', actions: true }
+  ];
+
+  /** État de la modale de suppression. */
+  suppressionOuverte = false;
+  messageSuppression = '';
+  private idSuppression: number | undefined;
 
   constructor(private router: Router,
     private categoryService: CategoryService) { }
@@ -23,43 +39,61 @@ export class CategoriesComponent implements OnInit {
   }
 
   findAllCategories(): void {
+    this.chargement = true;
+    this.errorMsg = '';
     this.categoryService.findAll()
-      .subscribe((res : Category[]) => {
+      .subscribe((res: Category[]) => {
         this.listCategory = res;
-      },(error : any)=>{
-        console.log(error);
+        this.chargement = false;
+      }, () => {
+        this.errorMsg = 'Erreur lors du chargement des catégories.';
+        this.chargement = false;
       });
   }
 
-  nouvelleCategorie():void{
+  nouvelleCategorie(): void {
     this.router.navigate(['newcategorie']);
   }
 
-  modifierCategory(id?: number): void {
-    this.router.navigate(['newcategorie', id]);
-  }
-
-  confirmerEtSupprimer():void{
-    if(this.selectedCategoryId)
-    {
-      console.log("Id category à supprimer : "+ this.selectedCategoryId)
-      this.categoryService.deleteCategory(this.selectedCategoryId).subscribe(
-        (responce :any)=>{
-          this.router.navigate(['categories']);
-          this.findAllCategories();
-        },
-        (error : any)=>{
-          this.errorMsg = error.error.message;
-          console.log(this.errorMsg);
-        })
+  /** Ouvre la confirmation de suppression pour une catégorie. */
+  surAction(action: ActionTable): void {
+    const category = action.ligne;
+    if (action.type === 'modifier' || action.type === 'details') {
+      this.router.navigate(['newcategorie', category.id]);
+      return;
     }
-
+    if (action.type === 'supprimer') {
+      this.idSuppression = category.id;
+      this.messageSuppression =
+        `Êtes-vous sûr de vouloir supprimer la catégorie « ${category.codeCategory ?? ''} » ? Cette action est irréversible.`;
+      this.suppressionOuverte = true;
+    }
   }
-  selectedCategory(idCategory : number , categoryDesignation : string):void{
-    this.selectedCategoryId = idCategory;
-    this.categoryName = categoryDesignation;
 
+  confirmerEtSupprimer(): void {
+    if (!this.idSuppression) {
+      return;
+    }
+    this.categoryService.deleteCategory(this.idSuppression).subscribe(
+      () => {
+        this.fermerSuppression();
+        this.findAllCategories();
+      },
+      (error) => {
+        this.fermerSuppression();
+        // Message métier du backend (catégorie utilisée par des articles…)
+        this.errorMsg = error?.error?.message ?? 'Suppression impossible.';
+        setTimeout(() => { this.errorMsg = ''; }, 5000);
+      });
   }
 
+  annulerSuppression(): void {
+    this.fermerSuppression();
+  }
 
+  private fermerSuppression(): void {
+    this.suppressionOuverte = false;
+    this.idSuppression = undefined;
+    this.messageSuppression = '';
+  }
 }

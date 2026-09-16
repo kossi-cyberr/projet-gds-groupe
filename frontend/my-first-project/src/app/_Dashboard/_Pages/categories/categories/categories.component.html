@@ -1,69 +1,31 @@
-<div class="col">
-  <div class="row m-3">
-    <div class="col-md-8 p-0">
-      <h1>Liste des categories</h1>
-    </div>
-    <div class="col-md-4 text-right">
-     <app-button-action (clickEvent)="nouvelleCategorie()"></app-button-action>
-    </div>
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <div>
+    <h1 class="page-title mb-0">Catégories</h1>
+    <p class="helper-text mb-0">Classement des articles</p>
   </div>
-  <div class="col m-3">
-    <div class="row col-md-12 alert alert-danger" *ngIf="errorMsg">
-      {{ errorMsg }}
-    </div>
-    <div class="row col-md-12 custom-border mb-3 p-3" *ngFor="let category of listCategory">
-      <div class="col-md-3 custom-border-right">
-      {{category.codeCategory}}
-      </div>
-      <div class="col-md-4 custom-border-right">
-        {{category.designation}}
-      </div>
-      <div class="col-md-3">
-        <div class="row">
-          <div class="col-md-4">
-            <button type="button" class="btn btn-link" (click)="modifierCategory(category.id)">
-              <i class="fas fa-pencil-alt"></i>&nbsp;Modifier
-            </button>
-          </div>
-          <div class="col-md-4">
-            <button type="button" class="btn btn-link text-danger" data-bs-toggle="modal" data-bs-target="#modalDeleteCat" (click)="selectedCategory(category.id!, category.codeCategory!)">
-              <i class="fas fa-trash-alt"></i>&nbsp;Supprimer
-            </button>
-          </div>
-          <div class="col-md-4">
-            <button type="button" class="btn btn-link ">
-              <i class="far fa-list-alt"></i>&nbsp;Details
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="row mb-3" *ngIf="listCategory.length > 0">
-    <div class=" col-md-12 text-center">
-      <app-pagination></app-pagination>
-    </div>
-  </div>
+  <button type="button" class="btn btn-primary btn-sm" (click)="nouvelleCategorie()">
+    <i-lucide name="plus" size="16"></i-lucide>
+    Nouvelle catégorie
+  </button>
 </div>
 
-<!-- Modal -->
-<div class="modal fade" id="modalDeleteCat" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel"
-     aria-hidden="true">
-  <div class="modal-dialog">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="staticBackdropLabel">Confirmation</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body">
-        Etes vous-sur de vouloir supprimer cette categorie : {{categoryName}}?
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-          <i class="fas fa-ban"></i>&nbsp;Annuler</button>
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="confirmerEtSupprimer()">
-          <i class="fas fa-trash-alt"></i>&nbsp;Supprimer</button>
-      </div>
-    </div>
-  </div>
-</div>
+<app-confirm-dialog
+  [ouvert]="suppressionOuverte"
+  titre="Supprimer la catégorie"
+  [message]="messageSuppression"
+  libelleConfirmer="Supprimer"
+  (confirme)="confirmerEtSupprimer()"
+  (annule)="annulerSuppression()">
+</app-confirm-dialog>
+
+<app-data-table
+  entite="catégorie"
+  [colonnes]="colonnes"
+  [lignes]="listCategory"
+  [chargement]="chargement"
+  [erreur]="errorMsg !== ''"
+  [erreurMessage]="errorMsg || 'Erreur lors du chargement des catégories.'"
+  (creer)="nouvelleCategorie()"
+  (reessayer)="findAllCategories()"
+  (action)="surAction($event)">
+</app-data-table>

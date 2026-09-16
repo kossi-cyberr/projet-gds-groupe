@@ -1,0 +1,23 @@
+<div *ngIf="ouvert" class="fixed inset-0 z-50 flex items-center justify-center p-4" role="dialog" aria-modal="true" [attr.aria-label]="titre">
+  <div class="absolute inset-0 bg-black/60" (click)="annuler()" aria-hidden="true"></div>
+  <div class="card relative w-full max-w-md bg-base-100 shadow-2xl">
+    <div class="card-body">
+      <div class="flex items-start gap-4">
+        <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-error/15 text-error">
+          <i-lucide [name]="icone" size="24"></i-lucide>
+        </div>
+        <div class="min-w-0">
+          <h2 class="card-title text-base">{{ titre }}</h2>
+          <p class="mb-0 text-sm text-base-content/70">{{ message }}</p>
+        </div>
+      </div>
+      <div class="mt-4 flex flex-col-reverse gap-2 sm:flex-row sm:justify-end">
+        <button type="button" class="btn btn-ghost" (click)="annuler()">Annuler</button>
+        <button type="button" class="btn btn-error" (click)="confirmer()">
+          <i-lucide name="trash-2" size="16"></i-lucide>
+          {{ libelleConfirmer }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

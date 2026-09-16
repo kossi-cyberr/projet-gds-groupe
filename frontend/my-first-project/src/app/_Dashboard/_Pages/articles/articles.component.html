@@ -1,29 +1,31 @@
-<div class="col">
-  <div class="row m-3">
-    <div class="col-md-5 p-0">
-      <h1>Liste des articles</h1>
-    </div>
-    <div class="col-md-3">
-      <input type="text" class="form-control" placeholder="Filtrer… (désignation ou code)"
-             [(ngModel)]="termeRecherche" (ngModelChange)="appliquerFiltre()">
-    </div>
-    <div class="col-md-4 text-right">
-      <app-button-action (clickEvent)="nouvelArticle()"></app-button-action>
-    </div>
+<div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+  <div>
+    <h1 class="page-title mb-0">Articles</h1>
+    <p class="helper-text mb-0">Catalogue de vos articles</p>
   </div>
-  <div class="col m-3">
-    <p class="text-muted" *ngIf="articlesFiltres.length === 0">Aucun article ne correspond à la recherche.</p>
-    <app-details-articles
-    *ngFor="let article of articlesFiltres"
-    [article]="article"
-    [articleName]="article.codeArticle!"
-  ></app-details-articles>
-
-  </div>
-  <div class="row mb-3">
-    <div class=" col-md-12 text-center">
-      <app-pagination></app-pagination>
-    </div>
-  </div>
-
+  <button type="button" class="btn btn-primary btn-sm" (click)="nouvelArticle()">
+    <i-lucide name="plus" size="16"></i-lucide>
+    Nouvel article
+  </button>
 </div>
+
+<app-confirm-dialog
+  [ouvert]="suppressionOuverte"
+  titre="Supprimer l'article"
+  [message]="messageSuppression"
+  libelleConfirmer="Supprimer"
+  (confirme)="confirmerSuppression()"
+  (annule)="annulerSuppression()">
+</app-confirm-dialog>
+
+<app-data-table
+  entite="article"
+  [colonnes]="colonnes"
+  [lignes]="articlesFiltres"
+  [chargement]="chargement"
+  [erreur]="errorMsg !== ''"
+  [erreurMessage]="errorMsg || 'Erreur lors du chargement des articles.'"
+  (creer)="nouvelArticle()"
+  (reessayer)="findAllArticle()"
+  (action)="surAction($event)">
+</app-data-table>

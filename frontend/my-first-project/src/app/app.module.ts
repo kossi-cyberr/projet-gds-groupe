@@ -13,7 +13,6 @@ import { LoginComponent } from './login/login.component';
 import { InscireComponent } from './inscire/inscire.component';
 import { DashboardComponent } from './_Dashboard/dashboard/dashboard.component';
 import { StatistiqueComponent } from './_Dashboard/statistique/statistique.component';
-import { MenuComponent } from './_Dashboard/components/menu/menu.component';
 import { HeaderComponent } from './_Dashboard/components/header/header.component';
 import { FooterComponent } from './_Dashboard/components/footer/footer.component';
 import { ArticlesComponent } from './_Dashboard/_Pages/articles/articles.component';
@@ -24,7 +23,6 @@ import { NewArticleComponent } from './_Dashboard/_Pages/articles/new-article/ne
 import { MvtStkComponent } from './_Dashboard/_Pages/MovmentDeStocke/mvt-stk/mvt-stk.component';
 import { DetailsMvtstkArticlesComponent } from './_Dashboard/components/details-mvtstk-articles/details-mvtstk-articles.component';
 import { DetailsMvtstkComponent } from './_Dashboard/components/details-mvtstk/details-mvtstk.component';
-import { DetailsClFrsComponent } from './_Dashboard/components/details-cl-frs/details-cl-frs.component';
 import { ClientsComponent } from './_Dashboard/_Pages/clients/clients/clients.component';
 import { FournisseursComponent } from './_Dashboard/_Pages/fournisseurs/fournisseurs/fournisseurs.component';
 import { NewCltFrsComponent } from './_Dashboard/components/new-clt-frs/new-clt-frs.component';
@@ -41,6 +39,8 @@ import { ProfileComponent } from './_Dashboard/_Pages/profile/profile/profile.co
 import { ChangerMotDepasseComponent } from './_Dashboard/_Pages/profile/changer-mot-depasse/changer-mot-depasse.component';
 import { AuthInterceptor } from './auth/intercptor/auth.interceptor';
 import { SidebarComponent } from './_Dashboard/components/sidebar/sidebar.component';
+import { DataTableComponent } from './_Dashboard/components/data-table/data-table.component';
+import { ConfirmDialogComponent } from './_Dashboard/components/confirm-dialog/confirm-dialog.component';
 import {
   LucideAngularModule,
   LayoutDashboard,
@@ -69,7 +69,6 @@ import {
     InscireComponent,
     DashboardComponent,
     StatistiqueComponent,
-    MenuComponent,
     HeaderComponent,
     FooterComponent,
     ArticlesComponent,
@@ -80,7 +79,6 @@ import {
     MvtStkComponent,
     DetailsMvtstkArticlesComponent,
     DetailsMvtstkComponent,
-    DetailsClFrsComponent,
     ClientsComponent,
     FournisseursComponent,
     NewCltFrsComponent,
@@ -95,7 +93,9 @@ import {
     DetailUtilisateurComponent,
     ProfileComponent,
     ChangerMotDepasseComponent,
-    SidebarComponent
+    SidebarComponent,
+    DataTableComponent,
+    ConfirmDialogComponent
   ],
   imports: [
     BrowserModule,

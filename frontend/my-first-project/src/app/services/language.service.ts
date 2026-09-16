@@ -25,7 +25,20 @@ const DICO: Record<Langue, Record<string, string>> = {
     'nav.cmdFournisseurs': 'Commandes fournisseurs',
     'nav.categories': 'Catégories',
     'nav.utilisateurs': 'Utilisateurs',
-    'nav.profil': 'Mon profil'
+    'nav.profil': 'Mon profil',
+    'col.nom': 'Nom',
+    'col.prenom': 'Prénom',
+    'col.telephone': 'Téléphone',
+    'col.email': 'E-mail',
+    'col.ville': 'Ville',
+    'col.pays': 'Pays',
+    'col.code': 'Code',
+    'col.designation': 'Désignation',
+    'col.categorie': 'Catégorie',
+    'col.prixTtc': 'Prix TTC',
+    'col.seuil': 'Seuil',
+    'col.roles': 'Rôles',
+    'col.actions': 'Actions'
   },
   en: {
     'app.clinic': 'Inventory management',
@@ -44,7 +57,20 @@ const DICO: Record<Langue, Record<string, string>> = {
     'nav.cmdFournisseurs': 'Supplier orders',
     'nav.categories': 'Categories',
     'nav.utilisateurs': 'Users',
-    'nav.profil': 'My profile'
+    'nav.profil': 'My profile',
+    'col.nom': 'Last name',
+    'col.prenom': 'First name',
+    'col.telephone': 'Phone',
+    'col.email': 'Email',
+    'col.ville': 'City',
+    'col.pays': 'Country',
+    'col.code': 'Code',
+    'col.designation': 'Name',
+    'col.categorie': 'Category',
+    'col.prixTtc': 'Price (incl. tax)',
+    'col.seuil': 'Threshold',
+    'col.roles': 'Roles',
+    'col.actions': 'Actions'
   }
 };
 

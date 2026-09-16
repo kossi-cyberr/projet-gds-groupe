@@ -51,7 +51,6 @@ public class EntrepriseServiceImpl implements EntrepriseService {
 
         UtilisateurDto utilisateurParDfaut = fromEntreprise(savedEntreprise);
 
-        utilisateurParDfaut.setDateDeNaissance("pas encore");
         UtilisateurDto savedUser = utilisateurService.save(utilisateurParDfaut);
 
         RoleDto rolesDto = RoleDto.builder()
@@ -73,7 +72,9 @@ public class EntrepriseServiceImpl implements EntrepriseService {
         return UtilisateurDto.builder()
                 .adresse(dto.getAdresse())
                 .nom(dto.getNom())
-                .prenom("Undefined")
+                // Le validateur exige un prenom : l'admin cree avec l'entreprise
+                // est affiche « Admin <Nom entreprise> ».
+                .prenom("Admin")
                 .email(dto.getEmail())
                 .motDePasse(defaultAdminPassword())
                 .entreprise(dto)

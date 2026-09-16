@@ -32,9 +32,7 @@ public class UtilisateursValidator {
         if (!StringUtils.hasLength(utilisateurDto.getMotDePasse())) {
             errors.add("Veuillez renseigner le mot de passe d'utilisateur");
         }
-        if (utilisateurDto.getDateDeNaissance() == null) {
-            errors.add("Veuillez renseigner la date de naissance d'utilisateur");
-        }
+        // La date de naissance est optionnelle (ex. : compte admin créé avec l'entreprise)
         errors.addAll(AdresseValidator.validate(utilisateurDto.getAdresse()));
 
         return errors;
