@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout du code
+        uses: actions/checkout@v4
+
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Testcontainers a besoin du daemon Docker (disponible nativement
+      # sur les runners GitHub Actions) pour lancer la vraie base PostgreSQL.
+      - name: Build + tests (Testcontainers) + rapport JaCoCo
+        run: mvn -B verify
+        env:
+          JWT_SECRET: CleSecreteDeTestPourLaCICetteCleEstLongueEtSecrete
+
+      - name: Upload du rapport de couverture
+        uses: actions/upload-artifact@v4
+        with:
+          name: jacoco-report
+          path: target/site/jacoco/
+          if-no-files-found: ignore

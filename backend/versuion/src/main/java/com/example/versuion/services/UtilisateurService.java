@@ -18,4 +18,20 @@ public interface UtilisateurService {
     UtilisateurDto findByEmail(String email);
 
     UtilisateurDto changerMotDePasse(ChangerMotDePasseUtilisateurDto dto);
+
+    /**
+     * Affecte un rôle (ADMIN / MANAGER / VENDEUR) à un utilisateur de l'entreprise courante.
+     */
+    UtilisateurDto assignerRole(Long idUtilisateur, String roleName);
+
+    /**
+     * Met à jour le profil de l'utilisateur connecté (nom, prénom, date de naissance,
+     * adresse, photo). L'email et le mot de passe ne sont pas modifiables ici.
+     */
+    UtilisateurDto updateMonProfil(UtilisateurDto dto);
+
+    /**
+     * Enregistre la photo de profil de l'utilisateur connecté et renvoie son URL.
+     */
+    UtilisateurDto updateMaPhoto(String urlPhoto);
 }

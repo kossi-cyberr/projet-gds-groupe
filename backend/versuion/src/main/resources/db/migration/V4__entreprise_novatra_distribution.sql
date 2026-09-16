@@ -1,0 +1,16 @@
+-- ============================================================================
+-- V4 : Entreprise NOVATRA DISTRIBUTION SA (seed métier complet)
+-- ============================================================================
+-- L'insertion des données est réalisée par V5, qui est idempotent et sait
+-- créer le schéma si nécessaire (Flyway s'exécute avant Hibernate sur une
+-- base fraîche). V4 marque l'intention et exécute le même bloc via \ir
+-- serait dépendant du moteur : le seed complet est donc porté par V5.
+--
+-- Voir V5__entreprise_novatra_second_passage.sql pour :
+--   * les 4 comptes (ADMIN / MANAGER / 2 VENDEURS, mdp « Novatra@2026 »),
+--   * 5 catégories, 8 articles (FCFA, TVA 19,25 %),
+--   * 5 clients, 3 fournisseurs,
+--   * 3 commandes clients, 2 commandes fournisseurs,
+--   * 6 ventes étalées sur 5 mois, 16 mouvements de stock.
+-- ============================================================================
+SELECT 1; -- no-op : le seed réel est effectué par V5 (idempotent)

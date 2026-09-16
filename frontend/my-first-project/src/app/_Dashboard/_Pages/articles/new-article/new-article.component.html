@@ -1,8 +1,8 @@
 <div class="col mb-3">
   <div class="col-md-12 mb-3 mt-3">
-    <button  style="background-color: transparent; border: none;">
-      <img src="assets/product.png" class="rounded-circle" width="200px" height="200px" />
-      <input hidden type="file" #fileInput>
+    <button style="background-color: transparent; border: none;" (click)="fileInput.click()" title="Choisir une photo">
+      <img [src]="afficherPhoto()" class="rounded-circle" width="200px" height="200px" style="object-fit: cover;" />
+      <input hidden type="file" #fileInput accept="image/jpeg,image/png,image/webp" (change)="surPhotoChoisie($event)">
     </button>
   </div>
   <hr>

@@ -1,45 +1,136 @@
 <div class="row m-3">
+  <!-- Carte identité -->
   <div class="card col-md-4 text-center mr-3">
     <div class="col">
-      <div class="mb-3 mt-3">
-        <img src="assets/product.png" class="rounded-circle" width="200px" height="200px"/>
+      <div class="mb-3 mt-3 position-relative">
+        <!-- Aperçu local si une nouvelle photo est choisie, sinon photo enregistrée, sinon avatar par défaut -->
+        <ng-container *ngIf="apercuPhoto; else photoEnregistree">
+          <img [src]="apercuPhoto" class="rounded-circle" width="200px" height="200px" style="object-fit: cover;" />
+        </ng-container>
+        <ng-template #photoEnregistree>
+          <img *ngIf="utilisateur.photo; else avatarDefaut" [src]="afficherPhoto()" class="rounded-circle" width="200px" height="200px" style="object-fit: cover;" />
+          <ng-template #avatarDefaut>
+            <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center" style="width:200px;height:200px;font-size:64px;font-weight:bold;">
+              {{ initiales() }}
+            </div>
+          </ng-template>
+        </ng-template>
       </div>
+
+      <!-- Sélection + envoi de la photo -->
       <div class="mb-3">
-        <h2>Nom Prenom</h2>
-        <small class="form-text text-muted">Adresse, Ville, 12345</small>
+        <label class="btn btn-outline-secondary btn-sm m-1" [ngClass]="{disabled: enCours}">
+          <i class="fas fa-camera"></i>&nbsp;Choisir une photo
+          <input type="file" accept="image/jpeg,image/png,image/webp" (change)="surPhotoChoisie($event)" hidden>
+        </label>
+        <button type="button" class="btn btn-success btn-sm m-1" *ngIf="photoSelectionnee"
+                (click)="enregistrerPhoto()" [disabled]="enCours">
+          <i class="fas fa-check"></i>&nbsp;Enregistrer la photo
+        </button>
+      </div>
+
+      <div class="mb-3">
+        <h2>{{ (utilisateur.nom ?? '') }} {{ (utilisateur.prenom ?? '') }}</h2>
+        <small class="form-text text-muted">{{ utilisateur.email }}</small>
       </div>
       <div class="col mb-3 p-0">
-        <button type="button" class="btn btn-primary m-1"><i class="fas fa-pencil-alt"></i>&nbsp;Modifier le
-          profil</button>
-        <button type="button" class="btn btn-warning" (click)="modifierMotDePasse()"><i class="fas fa-lock"></i>&nbsp;Changer le mot de passe</button>
+        <button type="button" class="btn btn-primary m-1" (click)="activerEdition()" *ngIf="!modeEdition">
+          <i class="fas fa-pencil-alt"></i>&nbsp;Modifier le profil
+        </button>
+        <button type="button" class="btn btn-warning" (click)="modifierMotDePasse()">
+          <i class="fas fa-lock"></i>&nbsp;Changer le mot de passe
+        </button>
       </div>
     </div>
   </div>
+
+  <!-- Détails / formulaire d'édition -->
   <div class="card col-md-7">
-    <table class="table">
+    <div class="alert alert-success mt-3" *ngIf="messageSucces">{{ messageSucces }}</div>
+    <div class="alert alert-danger mt-3" *ngIf="messageErreur">{{ messageErreur }}</div>
+
+    <!-- Mode lecture -->
+    <table class="table" *ngIf="!modeEdition">
       <tbody>
       <tr>
         <th scope="row">Nom complet</th>
-        <td>nom prenom</td>
+        <td>{{ utilisateur.nom }} {{ utilisateur.prenom }}</td>
       </tr>
       <tr>
         <th scope="row">Email</th>
-        <td>adresse@email.com</td>
+        <td>{{ utilisateur.email }}</td>
       </tr>
       <tr>
-        <th scope="row">telephone</th>
-        <td>011 22 33 44 55 66</td>
+        <th scope="row">Date de naissance</th>
+        <td>{{ utilisateur.dateDeNaissance || '—' }}</td>
+      </tr>
+      <tr>
+        <th scope="row">Rôles</th>
+        <td>
+          <span class="badge badge-primary mr-1" *ngFor="let r of utilisateur.roles">{{ r.rolename }}</span>
+          <span *ngIf="!utilisateur.roles?.length">—</span>
+        </td>
       </tr>
       <tr>
         <th scope="row">Adresse</th>
-        <td>Adresse, Ville, 12345</td>
+        <td>{{ adresseComplete() }}</td>
       </tr>
       <tr>
         <th scope="row">Entreprise</th>
-        <td>Nom entreprise</td>
+        <td>{{ utilisateur.entreprise?.nom || '—' }}</td>
       </tr>
       </tbody>
     </table>
-  </div>
 
+    <!-- Mode édition -->
+    <form class="mt-3" *ngIf="modeEdition">
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Nom</label>
+          <input type="text" class="form-control" name="nom" [(ngModel)]="form.nom" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Prénom</label>
+          <input type="text" class="form-control" name="prenom" [(ngModel)]="form.prenom" required>
+        </div>
+        <div class="form-group col-md-6">
+          <label>Date de naissance</label>
+          <input type="date" class="form-control" name="dateDeNaissance" [(ngModel)]="form.dateDeNaissance">
+        </div>
+      </div>
+      <h5 class="mt-2">Adresse</h5>
+      <div class="row">
+        <div class="form-group col-md-6">
+          <label>Adresse 1</label>
+          <input type="text" class="form-control" name="addresse1" [(ngModel)]="form.addresse1">
+        </div>
+        <div class="form-group col-md-6">
+          <label>Adresse 2</label>
+          <input type="text" class="form-control" name="addresse2" [(ngModel)]="form.addresse2">
+        </div>
+        <div class="form-group col-md-4">
+          <label>Ville</label>
+          <input type="text" class="form-control" name="Ville" [(ngModel)]="form.Ville">
+        </div>
+        <div class="form-group col-md-4">
+          <label>Code postal</label>
+          <input type="text" class="form-control" name="codePostale" [(ngModel)]="form.codePostale">
+        </div>
+        <div class="form-group col-md-4">
+          <label>Pays</label>
+          <input type="text" class="form-control" name="pays" [(ngModel)]="form.pays">
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-md-12 text-right">
+          <button type="button" class="btn btn-danger mr-3" (click)="annulerEdition()" [disabled]="enCours">
+            <i class="fas fa-ban"></i>&nbsp;Annuler
+          </button>
+          <button type="button" class="btn btn-primary" (click)="enregistrerProfil()" [disabled]="enCours">
+            <i class="fas fa-save"></i>&nbsp;Enregistrer
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
 </div>

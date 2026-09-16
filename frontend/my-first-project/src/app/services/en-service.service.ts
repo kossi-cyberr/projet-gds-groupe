@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
@@ -8,7 +9,7 @@ import { EntrepriseDto } from '../Models/EntrepriseDto';
 })
 export class EnServiceService {
 
-  APP_URL = 'http://localhost:8089/gestiondestock';
+  APP_URL = environment.apiUrl;
 
   requestHeader = new HttpHeaders(
     { "No-Auth": "True" }
@@ -23,6 +24,6 @@ export class EnServiceService {
   }
 
   testInterceptor():Observable<string>{
-    return this.http.get<string>("http://localhost:8089/message");
+    return this.http.get<string>(environment.apiUrl + "/message");
   }
 }

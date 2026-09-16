@@ -1,7 +1,8 @@
 package com.example.versuion.controller.api;
 
 import com.example.versuion.Dto.MvtStkDto;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,7 @@ import java.util.List;
 
 import static com.example.versuion.utiles.Constants.APP_ROOT;
 
-@Api("mvtstk")
+@Tag(name = "Mouvements de stock", description = "Gestion des mouvements de stock")
 public interface MvtStkApi {
     @GetMapping(APP_ROOT + "/mvtstk/stockreel/{idArticle}")
     BigDecimal stockReelArticle(@PathVariable("idArticle") Long  idArticle);
@@ -20,15 +21,22 @@ public interface MvtStkApi {
     @GetMapping(APP_ROOT + "/mvtstk/filter/article/{idArticle}")
     List<MvtStkDto> mvtStkArticle(@PathVariable("idArticle") Long idArticle);
 
+    @GetMapping(APP_ROOT + "/mvtstk/all")
+    List<MvtStkDto> findAll();
+
     @PostMapping(APP_ROOT + "/mvtstk/entree")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     MvtStkDto entreeStock(@RequestBody MvtStkDto dto);
 
     @PostMapping(APP_ROOT + "/mvtstk/sortie")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     MvtStkDto sortieStock(@RequestBody MvtStkDto dto);
 
     @PostMapping(APP_ROOT + "/mvtstk/correctionpos")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     MvtStkDto correctionStockPos(@RequestBody MvtStkDto dto);
 
     @PostMapping(APP_ROOT + "/mvtstk/correctionneg")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     MvtStkDto correctionStockNeg(@RequestBody MvtStkDto dto);
 }

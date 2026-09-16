@@ -2,6 +2,7 @@ package com.example.versuion.services;
 
 import com.example.versuion.Dto.ComandeClientDto;
 import com.example.versuion.Dto.LigneCommandeClientDto;
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.models.EtatCommande;
 
 import java.math.BigDecimal;
@@ -16,6 +17,8 @@ public interface CommandeClinetService {
     ComandeClientDto findByCode(String code);
 
     List<ComandeClientDto> findAll();
+
+    PageResponse<ComandeClientDto> findAllPaginated(int page, int size, String sortBy, String sortDir, String search);
 
     void delete(Long id);
 

@@ -8,3 +8,88 @@
 .no-flex-warp{
   flex-wrap: inherit !important;
 }
+
+/* ===== Cartes KPI ===== */
+.kpi-card {
+  transition: transform .15s ease, box-shadow .15s ease;
+}
+.kpi-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+}
+.border-left-primary { border-left: 4px solid #4e73df; }
+.border-left-info    { border-left: 4px solid #36b9cc; }
+.border-left-success { border-left: 4px solid #1cc88a; }
+.border-left-danger  { border-left: 4px solid #e74a3b; }
+.border-left-secondary { border-left: 4px solid #858796; }
+
+.kpi-icone {
+  width: 44px; height: 44px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+.kpi-valeur {
+  font-size: 1.15rem;
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+/* ===== Graphique en barres CSS ===== */
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 180px;
+  padding-top: 10px;
+}
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.chart-bar {
+  width: 100%;
+  max-width: 34px;
+  min-height: 2px;
+  background: linear-gradient(180deg, #4e73df, #224abe);
+  border-radius: 4px 4px 0 0;
+  transition: height .4s ease;
+}
+.chart-bar-max {
+  background: linear-gradient(180deg, #1cc88a, #13855c);
+}
+.chart-col small {
+  margin-top: 4px;
+  color: #858796;
+  font-size: 9px;
+}
+
+/* ===== Divers ===== */
+.compteur {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #4e73df;
+}
+.avatar-mini {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px; height: 22px;
+  border-radius: 50%;
+  background: #4e73df;
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  margin-right: 4px;
+}
+.card {
+  border-radius: 10px;
+}
+.card-header {
+  background: #f8f9fc;
+}

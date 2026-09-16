@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UserService } from './user.service';
@@ -11,7 +12,7 @@ import { Observable } from 'rxjs';
 })
 export class ArticleService {
 
-  APP_URL = 'http://localhost:8089/gestiondestock/articles';
+  APP_URL = environment.apiUrl + '/articles';
 
   constructor(private router : Router,
     private userService: UserService,
@@ -32,6 +33,21 @@ export class ArticleService {
 
     deleteArticle(idArticle: number):Observable<void>{
       return this.httpClient.delete<void>(`${this.APP_URL}/delete/${idArticle}`);
+    }
+
+    /** Upload la photo d'un article (stockage local côté backend). */
+    updatePhotoArticle(idArticle: number, fichier: File):Observable<Article>{
+      const formData = new FormData();
+      formData.append('file', fichier);
+      return this.httpClient.post<Article>(`${environment.apiUrl}/photos/article/${idArticle}`, formData);
+    }
+
+    /** URL absolue d'une photo servie par le backend (ex. /photos/xxx.jpg). */
+    photoUrl(photo?: string): string | undefined {
+      if (!photo) {
+        return undefined;
+      }
+      return photo.startsWith('http') ? photo : `${environment.apiUrl.replace(/\/gestiondestock$/, '')}${photo}`;
     }
 /*
     enregisterArticle(article: Article):Observable<Article> {

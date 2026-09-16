@@ -1,21 +1,42 @@
 <div class="row">
-  <div class="col-md-8">
+  <div class="col-md-8 position-relative">
     <div class="input-group flex-nowrap">
-      <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="addon-wrapping">
+      <input type="text" class="form-control" placeholder="Rechercher un article (désignation ou code)…"
+             aria-label="Recherche" [(ngModel)]="recherche" (ngModelChange)="onRecherche()"
+             (focus)="afficherSuggestions = suggestions.length > 0"
+             (blur)="fermerSuggestionsPlusTard()">
       <div class="input-group-prepend">
-        <span class="input-group-text" id="addon-wrapping"><i class="fas fa-search"></i></span>
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
       </div>
+    </div>
+
+    <div class="suggestions shadow" *ngIf="afficherSuggestions && suggestions.length > 0">
+      <button type="button" class="suggestion-item" *ngFor="let a of suggestions" (mousedown)="ouvrirArticle(a)">
+        <i class="fas fa-box mr-2 text-muted"></i>
+        <b>{{a.codeArticle}}</b> — {{a.designation}}
+      </button>
+      <button type="button" class="suggestion-item suggestion-tous" (mousedown)="voirTousLesResultats()">
+        Voir tous les articles →
+      </button>
     </div>
   </div>
   <div class="col-md-4">
     <div class="row">
-      <div class="col-md-9 text-right">
+      <div class="col-md-7 text-right">
         <span>Bonjour {{connectedUser.nom}}&nbsp;</span>
+      </div>
+      <div class="col-md-2 text-center">
+        <button type="button" class="btn btn-link text-danger p-0" title="Se déconnecter" (click)="deconnexion()">
+          <i class="fas fa-sign-out-alt"></i>
+        </button>
       </div>
 
       <div class="col-md-3">
         <a href="javascript:void(0);" [routerLink]="['/profile']">
-          <img src="favicon.ico" class="rounded-circle" />
+          <img *ngIf="connectedUser?.photo; else avatarDefaut" [src]="avatarUrl()" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;" />
+          <ng-template #avatarDefaut>
+            <img src="favicon.ico" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;" />
+          </ng-template>
         </a>
       </div>
     </div>

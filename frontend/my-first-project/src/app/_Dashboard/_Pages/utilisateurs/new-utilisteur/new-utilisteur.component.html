@@ -1,66 +1,77 @@
 <div class="col mb-3">
   <div class="col-md-12 mb-3">
-    <img src="assets/product.png" class="rounded-circle" width="200px" height="200px" />
+    <h2><i class="fas fa-info-circle blue-color"></i>&nbsp;Nouvel utilisateur</h2>
   </div>
-  <hr>
+  <div class="alert alert-danger" *ngIf="errorMsg.length > 0">
+    <div *ngFor="let msg of errorMsg">
+      {{ msg }}
+    </div>
+  </div>
   <div class="col-md-12">
-    <div class="col-md-12 mb-3">
-      <h2><i class="fas fa-info-circle blue-color"></i>&nbsp;Information de l'utilisateur</h2>
-    </div>
-    <div class="col-md-12">
-      <form>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Nom">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Adresse 1">
-          </div>
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Nom *" name="nom" [(ngModel)]="form.nom">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Prenom">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Adresse 2">
-          </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Adresse 1 *" name="adresse1" [(ngModel)]="form.addresse1">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="E-mail">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Ville">
-          </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Prenom *" name="prenom" [(ngModel)]="form.prenom">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Telephone">
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Code postal">
-          </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Adresse 2" name="adresse2" [(ngModel)]="form.addresse2">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            &nbsp;
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Pays">
-          </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="email" class="form-control" placeholder="E-mail *" name="email" [(ngModel)]="form.email">
         </div>
-      </form>
-    </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Ville *" name="ville" [(ngModel)]="form.Ville">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="password" class="form-control" placeholder="Mot de passe *" name="motdepasse" [(ngModel)]="form.motDePasse">
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Code postal *" name="codepostal" [(ngModel)]="form.codePostale">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="date" class="form-control" placeholder="Date de naissance *" name="datenaissance" [(ngModel)]="form.dateDeNaissance">
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Pays *" name="pays" [(ngModel)]="form.pays">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <label class="form-text text-muted">Rôle</label>
+          <select class="form-control" name="role" [(ngModel)]="form.role">
+            <option value="VENDEUR">VENDEUR</option>
+            <option value="MANAGER">MANAGER</option>
+            <option value="ADMIN">ADMIN</option>
+          </select>
+        </div>
+        <div class="col">
+          &nbsp;
+        </div>
+      </div>
+    </form>
   </div>
   <div class="col-md-12 text-right">
-    <button class="btn btn-danger mr-3" (click)="cancel()">
+    <button class="btn btn-danger mr-3" (click)="cancel()" [disabled]="enCours">
       <i class="fas fa-ban"></i>&nbsp;
       Annuler
     </button>
-    <button class="btn btn-primary" >
+    <button class="btn btn-primary" (click)="enregistrer()" [disabled]="enCours">
       <i class="fas fa-save"></i>&nbsp;
       Enregitrer
     </button>
   </div>
-
 </div>

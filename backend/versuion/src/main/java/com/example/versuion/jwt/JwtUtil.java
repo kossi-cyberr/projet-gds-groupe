@@ -1,21 +1,30 @@
 package com.example.versuion.jwt;
 
 import com.example.versuion.models.auth.ExtendedUser;
-import com.example.versuion.services.auth.ApplicationUserDetailsService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.function.Function;
+import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
+
+import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
+import java.util.Date;
+import java.util.function.Function;
 
 @Service
 public class JwtUtil {
 
-    private String SECRET_KEY = "SecrteKeyNA32/3#ISET";
+    private final SecretKey key;
+    private final long expirationMs;
+
+    public JwtUtil(@Value("${jwt.secret}") String secret,
+                   @Value("${jwt.expiration:28800000}") long expirationMs) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
+        this.expirationMs = expirationMs;
+    }
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
@@ -26,9 +35,8 @@ public class JwtUtil {
     }
 
     public String extractIdEntreprise(String token) {
-        final Claims claims = extractAllClaims(token);
-
-        return claims.get("idEntreprise", String.class);
+        final Object idEntreprise = extractAllClaims(token).get("idEntreprise");
+        return idEntreprise == null ? null : idEntreprise.toString();
     }
 
     //Extraire des proprites à partir d'un token
@@ -36,10 +44,14 @@ public class JwtUtil {
         final Claims claims = extractAllClaims(token);
         return claimsResolver.apply(claims);
     }
-    //Extraire Toutes les proprites à partir d'un token
 
+    //Extraire Toutes les proprites à partir d'un token
     private Claims extractAllClaims(String token) {
-        return Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(token).getBody();
+        return Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Boolean isTokenExpired(String token) {
@@ -47,26 +59,28 @@ public class JwtUtil {
     }
 
     public String generateToken(ExtendedUser user) {
-        Map<String, Object> claims = new HashMap<>();
-        return createToken(claims, user);
+        return createToken(user);
     }
 
-    private String createToken(Map<String, Object> claims, ExtendedUser user) {
-
-        return Jwts.builder().setClaims(claims)
+    private String createToken(ExtendedUser user) {
+        final Date now = new Date(System.currentTimeMillis());
+        final io.jsonwebtoken.JwtBuilder builder = Jwts.builder()
                 .setSubject(user.getUsername())
-                .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 10 * 10))
-                .claim("idEntreprise", user.getIdEntreprise().toString())//Stocker lid entreprise dans le token por l utiliser dans lintercepte
-                .signWith(SignatureAlgorithm.HS256, SECRET_KEY).compact();
+                .setIssuedAt(now)
+                .setExpiration(new Date(now.getTime() + expirationMs));
+        if (user.getIdEntreprise() != null) {
+            //Stocker l'id entreprise dans le token pour le filtrage multi-entreprise
+            builder.claim("idEntreprise", user.getIdEntreprise().toString());
+        }
+        return builder
+                .signWith(key, SignatureAlgorithm.HS256)
+                .compact();
     }
 
     public Boolean validateToken(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
-        return (
-                username.equals(userDetails.getUsername())
-                        && !isTokenExpired(token)
-        );
+        return (username.equals(userDetails.getUsername())
+                && !isTokenExpired(token));
     }
 
 }

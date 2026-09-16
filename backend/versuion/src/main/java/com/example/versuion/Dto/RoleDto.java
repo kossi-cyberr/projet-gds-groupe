@@ -5,8 +5,8 @@ import lombok.Builder;
 import lombok.Data;
 import com.example.versuion.models.Utilisateurs;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 
 @Builder
 @Data

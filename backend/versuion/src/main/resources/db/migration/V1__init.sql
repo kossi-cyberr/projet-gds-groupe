@@ -1,0 +1,3 @@
+-- Placeholder d'initialisation.
+-- Le schéma est généré par Hibernate (ddl-auto=update) ; les migrations
+-- suivantes (V2, V3, ...) doivent contenir uniquement les évolutions de schéma.

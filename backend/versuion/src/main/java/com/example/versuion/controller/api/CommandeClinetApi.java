@@ -2,16 +2,19 @@ package com.example.versuion.controller.api;
 
 import com.example.versuion.Dto.ComandeClientDto;
 import com.example.versuion.Dto.LigneCommandeClientDto;
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.models.EtatCommande;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static com.example.versuion.utiles.Constants.APP_ROOT;
-@Api(APP_ROOT + "/commandesclients")
+@Tag(name = "Commandes clients", description = "Gestion des commandes clients")
 public interface CommandeClinetApi {
     @PostMapping(APP_ROOT + "/commandesclients/create")
     ResponseEntity<ComandeClientDto> save(@RequestBody ComandeClientDto dto);
@@ -25,7 +28,15 @@ public interface CommandeClinetApi {
     @GetMapping(APP_ROOT + "/commandesclients/all")
     ResponseEntity<List<ComandeClientDto>> findAll();
 
+    @GetMapping(APP_ROOT + "/commandesclients/paged")
+    ResponseEntity<PageResponse<ComandeClientDto>> findAllPaginated(@RequestParam(defaultValue = "0") int page,
+                                                                    @RequestParam(defaultValue = "10") int size,
+                                                                    @RequestParam(defaultValue = "id") String sortBy,
+                                                                    @RequestParam(defaultValue = "asc") String sortDir,
+                                                                    @RequestParam(required = false) String search);
+
     @DeleteMapping(APP_ROOT + "/commandesclients/delete/{idCommandeClient}")
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     ResponseEntity delete(@PathVariable("idCommandeClient") Long id);
 
 
@@ -48,6 +59,9 @@ public interface CommandeClinetApi {
 
      @GetMapping(APP_ROOT + "/commandesclients/lignesCommande/{idCommande}")
     ResponseEntity<List<LigneCommandeClientDto>> findAllLignesCommandesClientByCommandeClientId(@PathVariable("idCommande") Long idCommande);
+
+    @GetMapping(value = APP_ROOT + "/commandesclients/{idCommandeClient}/facture/pdf", produces = MediaType.APPLICATION_PDF_VALUE)
+    ResponseEntity<byte[]> genererFacturePdf(@PathVariable("idCommandeClient") Long idCommandeClient);
 
 
 }

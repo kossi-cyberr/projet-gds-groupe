@@ -1,6 +1,7 @@
 package com.example.versuion.Dto;
 
 import com.example.versuion.models.Utilisateurs;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,6 +23,11 @@ public class UtilisateurDto {
 
     private String dateDeNaissance;
 
+    /**
+     * Mot de passe : accepté en entrée (création / mise à jour) mais JAMAIS
+     * renvoyé dans les réponses JSON (le hash BCrypt ne doit pas fuiter).
+     */
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String motDePasse;
 
     private AdressDto adresse;

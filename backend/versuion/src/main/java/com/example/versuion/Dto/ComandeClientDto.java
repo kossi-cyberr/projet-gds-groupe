@@ -4,13 +4,13 @@ import com.example.versuion.models.Client;
 import com.example.versuion.models.CommandeClient;
 import com.example.versuion.models.EtatCommande;
 import com.example.versuion.models.LigneComandeClient;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import java.time.Instant;
 import java.util.List;
 
@@ -30,7 +30,7 @@ public class ComandeClientDto {
 
     private Integer idEntreprise;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private List<LigneCommandeClientDto> ligneComandeClientList;
 
     //Mapping

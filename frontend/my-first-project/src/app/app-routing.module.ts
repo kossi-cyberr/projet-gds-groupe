@@ -54,7 +54,19 @@ const routes: Routes = [
         }
       },
       {
+        path: "newclient/:id", component: NewCltFrsComponent,
+        data: {
+          origin: 'client'
+        }
+      },
+      {
         path: "newfournisseur", component: NewCltFrsComponent,
+        data: {
+          origin: 'forunisseur'
+        }
+      },
+      {
+        path: "newfournisseur/:id", component: NewCltFrsComponent,
         data: {
           origin: 'forunisseur'
         }

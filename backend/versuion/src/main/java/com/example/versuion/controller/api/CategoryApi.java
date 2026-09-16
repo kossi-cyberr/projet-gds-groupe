@@ -1,7 +1,7 @@
 package com.example.versuion.controller.api;
 
 import com.example.versuion.Dto.CategoryDto;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 import static com.example.versuion.utiles.Constants.APP_ROOT;
 
-@Api(APP_ROOT + "/categories")
+@Tag(name = "Categories", description = "Gestion des categories")
 public interface CategoryApi {
     @PostMapping(value = APP_ROOT + "/categories/create", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     CategoryDto save(@RequestBody CategoryDto dto);

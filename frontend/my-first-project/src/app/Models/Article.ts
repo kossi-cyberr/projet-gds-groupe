@@ -11,6 +11,7 @@ export interface Article {
   prixUnitaire?: number;
   tauxTva?: number;
   prixUnitaireTTc?: number;
+  seuilAlerte?: number;
   photo?: string;
   category?: Category;
   idEntreprise?: number;

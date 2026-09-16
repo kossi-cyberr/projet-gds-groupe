@@ -9,6 +9,7 @@ public interface MvtStkService {
 
     BigDecimal stockReelArticle(Long idArticle);
     List<MvtStkDto> mvtStkArticle(Long idArticle);
+    List<MvtStkDto> findAll();
     MvtStkDto entreeStock(MvtStkDto dto);
     MvtStkDto sortieStock(MvtStkDto dto);
     MvtStkDto correctionStockPos(MvtStkDto dto);

@@ -1,18 +1,20 @@
 <div class="col">
   <div class="row m-3">
-    <div class="col-md-8 p-0">
+    <div class="col-md-5 p-0">
       <h1>Liste des articles</h1>
+    </div>
+    <div class="col-md-3">
+      <input type="text" class="form-control" placeholder="Filtrer… (désignation ou code)"
+             [(ngModel)]="termeRecherche" (ngModelChange)="appliquerFiltre()">
     </div>
     <div class="col-md-4 text-right">
       <app-button-action (clickEvent)="nouvelArticle()"></app-button-action>
     </div>
-   <!--<div class="alert alert-danger" *ngIf="errorMsg">
-      {{ errorMsg }}
-    </div>-->
   </div>
   <div class="col m-3">
+    <p class="text-muted" *ngIf="articlesFiltres.length === 0">Aucun article ne correspond à la recherche.</p>
     <app-details-articles
-    *ngFor="let article of articlesList"
+    *ngFor="let article of articlesFiltres"
     [article]="article"
     [articleName]="article.codeArticle!"
   ></app-details-articles>

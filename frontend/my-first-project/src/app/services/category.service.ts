@@ -1,3 +1,4 @@
+import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Category } from '../Models/Category';
@@ -9,7 +10,7 @@ import { UserService } from './user.service';
 })
 export class CategoryService {
 
-  APP_URL = 'http://localhost:8089/gestiondestock';
+  APP_URL = environment.apiUrl;
 
   constructor(private httpClient : HttpClient,
     private userService: UserService) {}

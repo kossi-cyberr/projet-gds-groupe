@@ -3,9 +3,11 @@ package com.example.versuion.controller;
 import com.example.versuion.Dto.ChangerMotDePasseUtilisateurDto;
 import com.example.versuion.Dto.UtilisateurDto;
 import com.example.versuion.controller.api.UtilisateurApi;
+import com.example.versuion.services.PhotoStorageService;
 import com.example.versuion.services.UtilisateurService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -13,15 +15,17 @@ import java.util.List;
 public class UtilisateurControlleur implements UtilisateurApi {
 
     UtilisateurService utilisateurService;
+    PhotoStorageService photoStorageService;
 
     @Autowired
-    public UtilisateurControlleur(UtilisateurService utilisateurService){
+    public UtilisateurControlleur(UtilisateurService utilisateurService, PhotoStorageService photoStorageService){
         this.utilisateurService = utilisateurService;
+        this.photoStorageService = photoStorageService;
     }
 
     @Override
-    public String save(UtilisateurDto dto) {
-        return utilisateurService.save(dto).toString();
+    public UtilisateurDto save(UtilisateurDto dto) {
+        return utilisateurService.save(dto);
     }
 
     @Override
@@ -46,5 +50,21 @@ public class UtilisateurControlleur implements UtilisateurApi {
     @Override
     public UtilisateurDto changerMotDePasse(ChangerMotDePasseUtilisateurDto dto) {
         return utilisateurService.changerMotDePasse(dto);
+    }
+
+    @Override
+    public UtilisateurDto assignerRole(Long idUtilisateur, String roleName) {
+        return utilisateurService.assignerRole(idUtilisateur, roleName);
+    }
+
+    @Override
+    public UtilisateurDto updateMonProfil(UtilisateurDto dto) {
+        return utilisateurService.updateMonProfil(dto);
+    }
+
+    @Override
+    public UtilisateurDto updateMaPhoto(MultipartFile fichier) {
+        String url = photoStorageService.enregistrer(fichier);
+        return utilisateurService.updateMaPhoto(url);
     }
 }

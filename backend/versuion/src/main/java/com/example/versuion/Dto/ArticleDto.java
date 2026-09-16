@@ -23,6 +23,8 @@ public class ArticleDto {
 
     private BigDecimal prixUnitaireTTc;
 
+    private BigDecimal seuilAlerte;
+
     private String photo;
 
     private CategoryDto category;
@@ -40,6 +42,7 @@ public class ArticleDto {
                 .prixUnitaire(article.getPrixUnitaire())
                 .tauxTva(article.getTauxTva())
                 .prixUnitaireTTc(article.getPrixUnitaireTTc())
+                .seuilAlerte(article.getSeuilAlerte())
                 .photo(article.getPhoto())
                 .idEntreprise(article.getIdEntreprise())
                 .category(CategoryDto.fromEntity(article.getCategory()))
@@ -57,6 +60,7 @@ public class ArticleDto {
         article.setPrixUnitaire(articleDto.getPrixUnitaire());
         article.setTauxTva(articleDto.getTauxTva());
         article.setPrixUnitaireTTc(articleDto.getPrixUnitaireTTc());
+        article.setSeuilAlerte(articleDto.getSeuilAlerte());
         article.setPhoto(articleDto.getPhoto());
         article.setIdEntreprise(articleDto.getIdEntreprise());
         article.setCategory(CategoryDto.toEntity(articleDto.getCategory()));

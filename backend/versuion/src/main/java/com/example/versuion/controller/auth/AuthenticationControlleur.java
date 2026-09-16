@@ -1,15 +1,19 @@
 package com.example.versuion.controller.auth;
 
+import com.example.versuion.Dto.UtilisateurDto;
 import com.example.versuion.Dto.auth.AuthenticationRequest;
 import com.example.versuion.Dto.auth.AuthenticationResponse;
 import com.example.versuion.jwt.JwtUtil;
 import com.example.versuion.models.auth.ExtendedUser;
+import com.example.versuion.services.UtilisateurService;
 import com.example.versuion.services.auth.ApplicationUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -30,6 +34,9 @@ public class AuthenticationControlleur {
     @Autowired
     private JwtUtil jwtUtil;
 
+    @Autowired
+    private UtilisateurService utilisateurService;
+
 
 
     //Authentifier user qui va connecter
@@ -48,5 +55,14 @@ public class AuthenticationControlleur {
         final String jwt = jwtUtil.generateToken((ExtendedUser)userDetails);
 
         return AuthenticationResponse.builder().accessToken(jwt).build();
+    }
+
+    /**
+     * Renvoie l'utilisateur connecté (avec ses rôles) à partir du token JWT.
+     */
+    @GetMapping("/me")
+    public UtilisateurDto me() {
+        String email = SecurityContextHolder.getContext().getAuthentication().getName();
+        return utilisateurService.findByEmail(email);
     }
 }

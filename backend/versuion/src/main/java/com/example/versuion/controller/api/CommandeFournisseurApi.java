@@ -3,14 +3,15 @@ package com.example.versuion.controller.api;
 import com.example.versuion.Dto.ComandeFournisseurDto;
 import com.example.versuion.Dto.LigneCommandeFournisseurDto;
 import com.example.versuion.models.EtatCommande;
-import io.swagger.annotations.Api;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.util.List;
 
 import static com.example.versuion.utiles.Constants.*;
-@Api(COMMANDE_FOURNISSEUR_ENDPOINT)
+@Tag(name = "Commandes fournisseurs", description = "Gestion des commandes fournisseurs")
 public interface CommandeFournisseurApi {
 
     @PostMapping(CREATE_COMMANDE_FOURNISSEUR_ENDPOINT)
@@ -27,6 +28,7 @@ public interface CommandeFournisseurApi {
 
 
     @DeleteMapping(DELETE_COMMANDE_FOURNISSEUR_ENDPOINT)
+    @PreAuthorize("hasAnyAuthority('ADMIN', 'MANAGER')")
     void delete(@PathVariable("idCommandeFournisseur") Long id);
 
     @PatchMapping(COMMANDE_FOURNISSEUR_ENDPOINT + "/update/etat/{idCommande}/{etatCommande}")

@@ -1,7 +1,6 @@
 package com.example.versuion.validator;
 
 import com.example.versuion.Dto.MvtStkDto;
-import org.springframework.util.StringUtils;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -27,7 +26,7 @@ public class MvtStkValidator {
         if (mvtStkDto.getArticle() == null || mvtStkDto.getArticle().getId() == null) {
             errors.add("Veuillez renseigner l'article");
         }
-        if (!StringUtils.hasLength(mvtStkDto.getTypeMvt().name())) {
+        if (mvtStkDto.getTypeMvt() == null) {
             errors.add("Veuillez renseigner le type du mouvement");
         }
 

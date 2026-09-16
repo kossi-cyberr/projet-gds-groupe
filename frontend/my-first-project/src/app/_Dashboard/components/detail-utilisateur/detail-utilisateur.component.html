@@ -1,61 +1,82 @@
 <div class="row mb-1 mr-0 custom-border">
-  <div class="col-md-1 custom-border-right p-1 text-center mb-1 mt-1 ">
-    <img src="assets/product.png" width="100px" height="100px">
+  <div class="col-md-1 custom-border-right p-1 text-center mb-1 mt-1">
+    <div class="rounded-circle bg-primary text-white d-inline-flex align-items-center justify-content-center"
+         style="width:100px;height:100px;font-size:32px;font-weight:bold;">
+      {{ initiales() }}
+    </div>
   </div>
 
-  <!--  Details article-->
-  <div class="col-md-5 custom-border-right mb-1 mt-1 ">
+  <!--  Details -->
+  <div class="col-md-5 custom-border-right mb-1 mt-1">
     <div class="col">
       <div class="row">
         <div class="col-md-1"><i class="fas fa-info-circle blue-color"></i></div>
-        <div class="col-md-10">Nom</div>
+        <div class="col-md-10">{{ utilisateur.nom }} {{ utilisateur.prenom }}</div>
       </div>
       <div class="row">
-        <div class="col-md-1"><i class="fas fa-info-circle blue-color"></i></div>
-        <div class="col-md-10">Prenom</div>
+        <div class="col-md-1"><i class="fas fa-envelope blue-color"></i></div>
+        <div class="col-md-10">{{ utilisateur.email }}</div>
       </div>
       <div class="row">
-        <div class="col-md-1"><i class="fas fa-phone-alt blue-color"></i></div>
-        <div class="col-md-10">0011 22 33 44 55 66</div>
+        <div class="col-md-1"><i class="fas fa-id-badge blue-color"></i></div>
+        <div class="col-md-10">
+          <span class="badge badge-primary mr-1" *ngFor="let r of utilisateur.roles">{{ r.rolename }}</span>
+          <span *ngIf="!utilisateur.roles?.length">Aucun rôle</span>
+        </div>
       </div>
     </div>
   </div>
 
-  <!--  details categorie-->
-  <div class="col-md-3 custom-border-right mb-1 mt-1 ">
+  <!--  details adresse-->
+  <div class="col-md-3 custom-border-right mb-1 mt-1">
     <div class="col">
       <div class="row">
         <div class="col-md-1"><i class="fas fa-home blue-color"></i></div>
-        <div class="col-md-10">Adresse 1 adresse 2</div>
+        <div class="col-md-10">{{ utilisateur.adresse?.addresse1 }}</div>
       </div>
       <div class="row">
         <div class="col-md-1"><i class="fas fa-map-marker-alt blue-color"></i></div>
-        <div class="col-md-10">12345 Ville</div>
+        <div class="col-md-10">{{ utilisateur.adresse?.codePostale }}&nbsp;{{ utilisateur.adresse?.Ville }}</div>
       </div>
       <div class="row">
         <div class="col-md-1"><i class="fas fa-globe-europe blue-color"></i></div>
-        <div class="col-md-10">Pays</div>
+        <div class="col-md-10">{{ utilisateur.adresse?.pays }}</div>
       </div>
     </div>
   </div>
 
   <!--  boutons action-->
-  <div class="col-md-3 mb-1 mt-1 ">
+  <div class="col-md-3 mb-1 mt-1">
     <div class="row">
-      <div class="col-md-4">
-        <button type="button" class="btn btn-link">
-          <i class="fas fa-pencil-alt"></i>&nbsp;Modifier
-        </button>
-      </div>
-      <div class="col-md-4">
-        <button type="button" class="btn btn-link">
+      <div class="col-md-6">
+        <button type="button" class="btn btn-link text-danger" data-bs-toggle="modal"
+                [attr.data-bs-target]="'#modalDeleteUser' + utilisateur.id">
           <i class="fas fa-trash-alt"></i>&nbsp;Supprimer
         </button>
       </div>
-      <div class="col-md-4">
-        <button type="button" class="btn btn-link ">
-          <i class="far fa-list-alt"></i>&nbsp;Details
-        </button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal fade" [attr.id]="'modalDeleteUser' + utilisateur.id" data-bs-backdrop="static" data-bs-keyboard="false"
+       tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Confirmation</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          Êtes-vous sûr de vouloir supprimer l'utilisateur {{ utilisateur.email }} ?
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+            <i class="fas fa-ban"></i>&nbsp;Annuler
+          </button>
+          <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="supprimer()">
+            <i class="fas fa-trash-alt"></i>&nbsp;Supprimer
+          </button>
+        </div>
       </div>
     </div>
   </div>

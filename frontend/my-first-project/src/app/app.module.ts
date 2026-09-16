@@ -15,6 +15,7 @@ import { DashboardComponent } from './_Dashboard/dashboard/dashboard.component';
 import { StatistiqueComponent } from './_Dashboard/statistique/statistique.component';
 import { MenuComponent } from './_Dashboard/components/menu/menu.component';
 import { HeaderComponent } from './_Dashboard/components/header/header.component';
+import { FooterComponent } from './_Dashboard/components/footer/footer.component';
 import { ArticlesComponent } from './_Dashboard/_Pages/articles/articles.component';
 import { DetailsArticlesComponent } from './_Dashboard/components/details-articles/details-articles.component';
 import { PaginationComponent } from './_Dashboard/components/pagination/pagination.component';
@@ -49,6 +50,7 @@ import { AuthInterceptor } from './auth/intercptor/auth.interceptor';
     StatistiqueComponent,
     MenuComponent,
     HeaderComponent,
+    FooterComponent,
     ArticlesComponent,
     DetailsArticlesComponent,
     PaginationComponent,

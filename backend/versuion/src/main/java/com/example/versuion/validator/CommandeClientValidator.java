@@ -24,7 +24,8 @@ public class CommandeClientValidator {
         if (comandeClientDto.getDateComande() == null) {
             errors.add("Veuillez renseigner la date de la commande");
         }
-        if (!StringUtils.hasLength(comandeClientDto.getEtatCommande().toString())) {
+        if (comandeClientDto.getEtatCommande() == null
+                || !StringUtils.hasLength(comandeClientDto.getEtatCommande().toString())) {
             errors.add("Veuillez renseigner l'etat de la commande");
         }
         if (comandeClientDto.getClient() == null || comandeClientDto.getClient().getId() == null) {

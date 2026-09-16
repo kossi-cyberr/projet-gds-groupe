@@ -1,5 +1,6 @@
 package com.example.versuion.controller;
 
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.Dto.VentesDto;
 import com.example.versuion.controller.api.VentesApi;
 import com.example.versuion.services.VentesService;
@@ -36,6 +37,11 @@ public class VentesControlleur implements VentesApi {
     @Override
     public List<VentesDto> findAll() {
         return ventesService.findAll();
+    }
+
+    @Override
+    public PageResponse<VentesDto> findAllPaginated(int page, int size, String sortBy, String sortDir, String search) {
+        return ventesService.findAllPaginated(page, size, sortBy, sortDir, search);
     }
 
     @Override

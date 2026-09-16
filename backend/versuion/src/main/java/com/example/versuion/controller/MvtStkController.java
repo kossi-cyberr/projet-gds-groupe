@@ -3,16 +3,16 @@ package com.example.versuion.controller;
 import com.example.versuion.Dto.MvtStkDto;
 import com.example.versuion.controller.api.MvtStkApi;
 import com.example.versuion.services.MvtStkService;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.math.BigDecimal;
 import java.util.List;
 
+@RestController
 public class MvtStkController implements MvtStkApi {
 
-    private MvtStkService service;
+    private final MvtStkService service;
 
-    @Autowired
     public MvtStkController(MvtStkService service) {
         this.service = service;
     }
@@ -25,6 +25,11 @@ public class MvtStkController implements MvtStkApi {
     @Override
     public List<MvtStkDto> mvtStkArticle(Long idArticle) {
         return service.mvtStkArticle(idArticle);
+    }
+
+    @Override
+    public List<MvtStkDto> findAll() {
+        return service.findAll();
     }
 
     @Override

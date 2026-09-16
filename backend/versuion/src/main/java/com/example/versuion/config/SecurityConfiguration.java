@@ -1,83 +1,67 @@
 package com.example.versuion.config;
 
 import com.example.versuion.jwt.JwtRequestFiltre;
-import com.example.versuion.services.auth.ApplicationUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.config.Customizer;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+@Configuration
 @EnableWebSecurity
-/*@EnableWebSecurity ccontient
-@configuration
-:*/
+@EnableMethodSecurity
+public class SecurityConfiguration {
 
-public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
-    @Autowired
-    private ApplicationUserDetailsService applicationUserDetailsService;
+    private final JwtRequestFiltre jwtRequestFiltre;
 
-    @Autowired
-    private JwtRequestFiltre jwtRequestFiltre;
-
-    //Chercher les informations de l'utilisateurs dans la base de donner
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(applicationUserDetailsService)
-                .passwordEncoder(passwordEncoder());
+    public SecurityConfiguration(JwtRequestFiltre jwtRequestFiltre) {
+        this.jwtRequestFiltre = jwtRequestFiltre;
     }
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.cors();
-        http.csrf().disable()//desactiver le csrf
-        .authorizeRequests()
-                .antMatchers("/**/auth/authentification",
-                        "/**/utilisateurs/create",
-                        "/**/articles/create",
-                        "/**/entreprises/create",
-                        "/**/categories/**",
-                        "/v2/api-docs",
-                        "/swagger-resources",
-                        "/swagger-resources/**",
-                        "/configuration/ui",
-                        "/configuration/security",
-                        "/swagger-ui.html",
-                        "/webjars/**",
-                        "/v3/api-docs/**",
-                        "/swagger-ui/**")
-                .permitAll() //Autoriser cette requette
-                .anyRequest()
-                .authenticated()// pour le reste des requettes il faut que l' user s'autentifer
-                .and()
-                .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-
-        // Utiliser ce filtre avant d'executer les requettes
-        http.addFilterBefore(jwtRequestFiltre, UsernamePasswordAuthenticationFilter.class);
-
-    }
-
-    @Override
     @Bean
-    protected AuthenticationManager authenticationManager() throws Exception {
-        return super.authenticationManager();
+    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        http.cors(Customizer.withDefaults())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/actuator/health",
+                                "/gestiondestock/auth/authentification",
+                                "/gestiondestock/articles/create",
+                                "/gestiondestock/entreprises/create",
+                                "/gestiondestock/categories/**",
+                                "/photos/**",
+                                "/v2/api-docs",
+                                "/swagger-resources",
+                                "/swagger-resources/**",
+                                "/configuration/ui",
+                                "/configuration/security",
+                                "/swagger-ui.html",
+                                "/webjars/**",
+                                "/v3/api-docs/**",
+                                "/swagger-ui/**")
+                        .permitAll()
+                        .anyRequest().authenticated())
+                .addFilterBefore(jwtRequestFiltre, UsernamePasswordAuthenticationFilter.class);
+        return http.build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authenticationConfiguration) throws Exception {
+        return authenticationConfiguration.getAuthenticationManager();
     }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
-
-
 }
-
-
-//// ctrl + alt + l

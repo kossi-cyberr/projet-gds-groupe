@@ -12,11 +12,10 @@ import com.example.versuion.services.EntrepriseService;
 import com.example.versuion.services.UtilisateurService;
 import com.example.versuion.validator.EntrepriseValidator;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -24,23 +23,26 @@ import java.util.stream.Collectors;
 @Slf4j
 public class EntrepriseServiceImpl implements EntrepriseService {
 
-    private EntrepriseRepository entrepriseRepository;
-    private UtilisateurService utilisateurService;
-    private RolesRepository rolesRepository;
+    private final EntrepriseRepository entrepriseRepository;
+    private final UtilisateurService utilisateurService;
+    private final RolesRepository rolesRepository;
+    private final String motDePasseAdminDefaut;
 
-    @Autowired
     public EntrepriseServiceImpl(EntrepriseRepository entrepriseRepository,
-                                 RolesRepository rolesRepository,UtilisateurService utilisateurService) {
+                                 RolesRepository rolesRepository, UtilisateurService utilisateurService,
+                                 @Value("${app.entreprise.default-password:Admin123!}") String motDePasseAdminDefaut) {
         this.entrepriseRepository = entrepriseRepository;
         this.rolesRepository = rolesRepository;
         this.utilisateurService = utilisateurService;
+        this.motDePasseAdminDefaut = motDePasseAdminDefaut;
     }
 
     @Override
+    @Transactional
     public EntrepriseDto save(EntrepriseDto dto) {
         List<String> errors = EntrepriseValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("Entreprise is not valid {}", dto);
+            log.error("Entreprise is not valid {0}", dto);
             throw new InvalidEntityException("L'entreprise n'est pas valide", ErrorCodes.ENTREPRISE_NOT_VALID, errors);
         }
         EntrepriseDto savedEntreprise = EntrepriseDto.fromEntity(
@@ -59,7 +61,12 @@ public class EntrepriseServiceImpl implements EntrepriseService {
 
         rolesRepository.save(RoleDto.toEntity(rolesDto));
 
-        return  savedEntreprise;
+        // Renseigne le mot de passe temporaire UNIQUEMENT dans la réponse de création
+        savedEntreprise.setMotDePasse(motDePasseAdminDefaut);
+        log.info("Entreprise « {} » créée. Utilisateur admin : {}",
+                savedEntreprise.getNom(), savedEntreprise.getEmail());
+
+        return savedEntreprise;
     }
 
     private UtilisateurDto fromEntreprise(EntrepriseDto dto) {
@@ -68,15 +75,17 @@ public class EntrepriseServiceImpl implements EntrepriseService {
                 .nom(dto.getNom())
                 .prenom("Undefined")
                 .email(dto.getEmail())
-                .motDePasse(generateRandomPassword())
+                .motDePasse(defaultAdminPassword())
                 .entreprise(dto)
                 .dateDeNaissance(null)
                 .photo(dto.getPhoto())
                 .build();
     }
 
-    private String generateRandomPassword() {
-        return "som3R@nd0mP@$$word";
+    private String defaultAdminPassword() {
+        // Mot de passe temporaire par défaut, surchargeable via la propriété
+        // app.entreprise.default-password (env DEFAULT_ADMIN_PASSWORD).
+        return motDePasseAdminDefaut;
     }
 
     @Override
@@ -85,17 +94,17 @@ public class EntrepriseServiceImpl implements EntrepriseService {
             log.error("Entreprise ID is null");
             return null;
         }
-        return entrepriseRepository.findById(id)
+        return entrepriseRepository.findByIdTenant(id)
                 .map(EntrepriseDto::fromEntity)
                 .orElseThrow(() -> new EntityNotFoundException(
-                        "Aucune entreprise avec l'ID = " + id + " n' ete trouve dans la BDD",
+                        "Aucune entreprise avec l'ID = " + id + " n'a ete trouve dans la BDD",
                         ErrorCodes.ENTREPRISE_NOT_FOUND)
                 );
     }
 
     @Override
     public List<EntrepriseDto> findAll() {
-        return entrepriseRepository.findAll().stream()
+        return entrepriseRepository.findAllTenant().stream()
                 .map(EntrepriseDto::fromEntity)
                 .collect(Collectors.toList());
     }
@@ -106,6 +115,11 @@ public class EntrepriseServiceImpl implements EntrepriseService {
             log.error("Entreprise ID is null");
             return;
         }
+        // Verifier que l'entreprise est bien celle de la requete courante
+        entrepriseRepository.findByIdTenant(id)
+                .orElseThrow(() -> new EntityNotFoundException(
+                        "Aucune entreprise avec l'ID = " + id + " n'a ete trouve dans la BDD",
+                        ErrorCodes.ENTREPRISE_NOT_FOUND));
         entrepriseRepository.deleteById(id);
     }
-    }
+}

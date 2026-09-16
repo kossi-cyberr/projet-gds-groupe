@@ -3,12 +3,9 @@ package com.example.versuion.services;
 import com.example.versuion.Dto.ComandeFournisseurDto;
 import com.example.versuion.Dto.LigneCommandeFournisseurDto;
 import com.example.versuion.models.EtatCommande;
-import io.swagger.annotations.Api;
 
 import java.math.BigDecimal;
 import java.util.List;
-
-import static com.example.versuion.utiles.Constants.APP_ROOT;
 
 public interface CommandeFournisseurService {
 

@@ -3,11 +3,12 @@ package com.example.versuion.Dto;
 import com.example.versuion.models.Adresse;
 import com.example.versuion.models.Entreprise;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Embedded;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 @Builder
 @Data
@@ -30,6 +31,13 @@ public class EntrepriseDto {
     private String numTel;
 
     private String siteWeb;
+
+    /**
+     * Mot de passe temporaire de l'administrateur : renseigné UNIQUEMENT dans la
+     * réponse de la création d'entreprise. Absent (null) ailleurs.
+     */
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String motDePasse;
 
     @JsonIgnore
     private List<UtilisateurDto> utilisateurs;

@@ -4,6 +4,7 @@ import com.example.versuion.Dto.ArticleDto;
 import com.example.versuion.Dto.LigneCommandeClientDto;
 import com.example.versuion.Dto.LigneCommandeFournisseurDto;
 import com.example.versuion.Dto.LigneVentDto;
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.controller.api.ArticleApi;
 import com.example.versuion.services.ArticleService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,6 +39,16 @@ public class ArticleControler implements ArticleApi {
     @Override
     public List<ArticleDto> findAll() {
         return articleService.findAll();
+    }
+
+    @Override
+    public PageResponse<ArticleDto> findAllPaginated(int page, int size, String sortBy, String sortDir, String search) {
+        return articleService.findAllPaginated(page, size, sortBy, sortDir, search);
+    }
+
+    @Override
+    public List<ArticleDto> findArticlesSousSeuil() {
+        return articleService.findArticlesSousSeuil();
     }
 
     @Override

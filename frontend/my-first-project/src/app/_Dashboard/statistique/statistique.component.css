@@ -1,0 +1,60 @@
+/* ===== Cartes résumé ===== */
+.stat-resume {
+  border-top: 3px solid #4e73df;
+}
+.stat-valeur {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* ===== Graphique en barres ===== */
+.chart-bars {
+  display: flex;
+  align-items: flex-end;
+  gap: 6px;
+  height: 220px;
+  padding-top: 10px;
+}
+.chart-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  height: 100%;
+}
+.chart-val {
+  font-size: 9px;
+  color: #4e73df;
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+.chart-bar {
+  width: 100%;
+  max-width: 38px;
+  min-height: 2px;
+  background: linear-gradient(180deg, #4e73df, #224abe);
+  border-radius: 4px 4px 0 0;
+  transition: height .4s ease;
+}
+.chart-col small {
+  margin-top: 4px;
+  color: #858796;
+  font-size: 9px;
+}
+
+/* ===== Camembert CSS (conic-gradient) ===== */
+.camembert {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 0 6px #f8f9fc;
+}
+.puce {
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+}

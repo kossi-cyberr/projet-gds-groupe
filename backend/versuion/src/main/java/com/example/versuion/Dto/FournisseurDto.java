@@ -7,8 +7,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.persistence.Embedded;
-import javax.persistence.OneToMany;
+import jakarta.persistence.Embedded;
+import jakarta.persistence.OneToMany;
 import java.util.List;
 @Builder
 @Data

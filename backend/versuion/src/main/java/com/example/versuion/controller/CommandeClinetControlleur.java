@@ -2,10 +2,14 @@ package com.example.versuion.controller;
 
 import com.example.versuion.Dto.ComandeClientDto;
 import com.example.versuion.Dto.LigneCommandeClientDto;
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.controller.api.CommandeClinetApi;
 import com.example.versuion.models.EtatCommande;
 import com.example.versuion.services.CommandeClinetService;
+import com.example.versuion.services.FacturePdfService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -15,10 +19,12 @@ import java.util.List;
 public class CommandeClinetControlleur implements CommandeClinetApi {
 
     private CommandeClinetService commandeClientService;
+    private final FacturePdfService facturePdfService;
 
     @Autowired
-    public CommandeClinetControlleur(CommandeClinetService commandeClientService) {
+    public CommandeClinetControlleur(CommandeClinetService commandeClientService, FacturePdfService facturePdfService) {
         this.commandeClientService = commandeClientService;
+        this.facturePdfService = facturePdfService;
     }
 
     @Override
@@ -39,6 +45,11 @@ public class CommandeClinetControlleur implements CommandeClinetApi {
     @Override
     public ResponseEntity<List<ComandeClientDto>> findAll() {
         return ResponseEntity.ok(commandeClientService.findAll());
+    }
+
+    @Override
+    public ResponseEntity<PageResponse<ComandeClientDto>> findAllPaginated(int page, int size, String sortBy, String sortDir, String search) {
+        return ResponseEntity.ok(commandeClientService.findAllPaginated(page, size, sortBy, sortDir, search));
     }
 
     @Override
@@ -77,5 +88,13 @@ public class CommandeClinetControlleur implements CommandeClinetApi {
         return ResponseEntity.ok(commandeClientService.findAllLignesCommandesClientByCommandeClientId(idCommande));
     }
 
+    @Override
+    public ResponseEntity<byte[]> genererFacturePdf(Long idCommandeClient) {
+        byte[] pdf = facturePdfService.genererFacture(idCommandeClient);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=facture-" + idCommandeClient + ".pdf")
+                .contentType(MediaType.APPLICATION_PDF)
+                .body(pdf);
+    }
 
 }

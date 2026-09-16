@@ -3,6 +3,11 @@ package com.example.versuion.utiles;
 public interface Constants {
     String APP_ROOT = "gestiondestock";
 
+    // --- Rôles applicatifs (utilisés par @PreAuthorize) ---
+    String ROLE_ADMIN = "ADMIN";
+    String ROLE_MANAGER = "MANAGER";
+    String ROLE_VENDEUR = "VENDEUR";
+
     String COMMANDE_FOURNISSEUR_ENDPOINT = APP_ROOT + "/commandesfournisseurs";
     String CREATE_COMMANDE_FOURNISSEUR_ENDPOINT = COMMANDE_FOURNISSEUR_ENDPOINT + "/create";
     String FIND_COMMANDE_FOURNISSEUR_BY_ID_ENDPOINT = COMMANDE_FOURNISSEUR_ENDPOINT + "/{idCommandeFournisseur}";

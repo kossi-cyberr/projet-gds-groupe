@@ -2,7 +2,7 @@ package com.example.versuion.models;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.math.BigDecimal;
 import java.util.List;
 
@@ -22,6 +22,9 @@ public class Article extends AbstractEntity{
     private BigDecimal tauxTva;
 
     private BigDecimal prixUnitaireTTc;
+
+    /** Seuil de stock sous lequel une alerte est déclenchée (optionnel). */
+    private BigDecimal seuilAlerte;
 
     private String photo;
 

@@ -1,0 +1,28 @@
+# Compiled backend
+backend/versuion/target/
+backend/versuion/photos/
+
+# Frontend Angular
+frontend/my-first-project/node_modules/
+frontend/my-first-project/dist/
+frontend/my-first-project/.angular/
+
+# Frontend Next.js
+frontend/stock-ui/node_modules/
+frontend/stock-ui/.next/
+
+# Node racine (Capacitor)
+node_modules/
+
+# IDE
+.idea/
+*.iml
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs & temporaires
+*.log
+*.tmp

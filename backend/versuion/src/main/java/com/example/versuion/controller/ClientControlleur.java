@@ -1,6 +1,7 @@
 package com.example.versuion.controller;
 
 import com.example.versuion.Dto.ClientDto;
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.controller.api.ClientApi;
 import com.example.versuion.services.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,11 @@ public class ClientControlleur implements ClientApi {
     }
 
     @Override
+    public ClientDto update(Long id, ClientDto dto) {
+        return clientService.update(id, dto);
+    }
+
+    @Override
     public ClientDto findById(Long id) {
         return clientService.findById(id);
     }
@@ -30,6 +36,11 @@ public class ClientControlleur implements ClientApi {
     @Override
     public List<ClientDto> findAll() {
         return clientService.findAll();
+    }
+
+    @Override
+    public PageResponse<ClientDto> findAllPaginated(int page, int size, String sortBy, String sortDir, String search) {
+        return clientService.findAllPaginated(page, size, sortBy, sortDir, search);
     }
 
     @Override

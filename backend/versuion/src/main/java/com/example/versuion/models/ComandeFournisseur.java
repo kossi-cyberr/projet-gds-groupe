@@ -2,7 +2,7 @@ package com.example.versuion.models;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.time.Instant;
 import java.util.List;
 

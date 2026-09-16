@@ -1,98 +1,112 @@
 <div class="col mb-3">
   <div class="col-md-12">
     <div class="col-md-12 mb-3 mt-3">
-      <h2>Nouvelle command {{origin}}</h2>
+      <h2>Nouvelle commande {{ estClient ? 'client' : 'fournisseur' }}</h2>
     </div>
-    <!--<div class="alert alert-danger" *ngIf="errorMsg.length">
+    <div class="alert alert-danger" *ngIf="errorMsg.length">
       <div *ngFor="let msg of errorMsg">
         <span> {{ msg }}</span>
       </div>
-    </div>-->
+    </div>
     <div class="row p-3 custom-border">
       <div class="col-md-5 custom-border-right">
         <form>
           <div class="form-group">
-            <input type="text" class="form-control" name="codeCmd" placeholder="Code commande">
-          </div>
-          <div class="form-group">
-            <input type="text" class="form-control" placeholder="Date commande">
-          </div>
-          <div class="form-group">
-            <select class="form-control" name="cltFrs">
-              <option>Selectionner un</option>
-              <option >
-                obj.nom &nbsp; obj.prenom
+            <select class="form-control" name="cltFrs" [(ngModel)]="idPartenaireChoisi" (ngModelChange)="surPartenaireChange()">
+              <option [ngValue]="undefined">Selectionner un {{ estClient ? 'client' : 'fournisseur' }}</option>
+              <option *ngFor="let p of (estClient ? clients : fournisseurs)" [value]="p.id">
+                {{ p.nom }} &nbsp; {{ p.prenom }}
               </option>
             </select>
           </div>
         </form>
       </div>
-      <div class="col-md-5 custom-border-right" >
+      <div class="col-md-5 custom-border-right">
         <div class="col">
           <div class="row">
             <div class="col-md-1"><i class="fas fa-info-circle blue-color"></i></div>
-            <div class="col-md-10"> selectedClientFournisseur.nom</div>
+            <div class="col-md-10">{{ partenaireChoisi?.nom }}</div>
           </div>
           <div class="row">
             <div class="col-md-1"><i class="fas fa-info-circle blue-color"></i></div>
-            <div class="col-md-10"> selectedClientFournisseur.prenom </div>
+            <div class="col-md-10">{{ partenaireChoisi?.prenom }}</div>
           </div>
           <div class="row">
             <div class="col-md-1"><i class="fas fa-phone-alt blue-color"></i></div>
-            <div class="col-md-10">  selectedClientFournisseur.numTel</div>
+            <div class="col-md-10">{{ partenaireChoisi?.numTel || '—' }}</div>
           </div>
           <div class="row">
             <div class="col-md-1"><i class="fas fa-hourglass-half blue-color"></i></div>
-            <div class="col-md-10 text-primary">EN PREPARATION</div>
+            <div class="col-md-10 text-primary">EN_PREPARATION</div>
           </div>
         </div>
       </div>
-      <div class="col-md-2 text-center">
-        <img src="assets/product.png" class="rounded-circle" width="150px"
-             height="150px" />
-      </div>
     </div>
+
+    <!-- Ajout de lignes -->
     <div class="row mt-2 p-3 custom-border">
-        <div class="form-row col-md-12">
-          <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Code article" >
-            <div  class="autocomplete shadow p-3 mb-5 bg-white rounded">
-              <p class="p-1"              >
-               article.codeArticle &nbsp; article.designation
-              </p>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <input type="text" class="form-control" placeholder="Quantite" >
-          </div>
-          <div class="col-md-3">
-            <input type="text" class="form-control" placeholder="Prix unitaire" >
-          </div>
-          <div class="col-md-1">
-            <button type="button" class="btn btn-success" ><i class="fas fa-plus"></i></button>
+      <div class="form-row col-md-12">
+        <div class="col-md-4 position-relative">
+          <input type="text" class="form-control" placeholder="Rechercher un article…"
+                 name="articleRecherche" [(ngModel)]="articleRecherche"
+                 (ngModelChange)="surRechercheArticle()">
+          <div class="autocomplete shadow p-3 mb-5 bg-white rounded" *ngIf="articlesSuggeres.length">
+            <p class="p-1" style="cursor:pointer" *ngFor="let a of articlesSuggeres" (click)="choisirArticle(a)">
+              {{ a.codeArticle }} &nbsp; {{ a.designation }}
+            </p>
           </div>
         </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" placeholder="Quantite *" min="1" name="quantite"
+                 [(ngModel)]="ligneEnCours.quantite">
+        </div>
+        <div class="col-md-3">
+          <input type="number" class="form-control" placeholder="Prix unitaire" name="prixUnitaire"
+                 [(ngModel)]="ligneEnCours.prixUnitaire">
+        </div>
+        <div class="col-md-2">
+          <button type="button" class="btn btn-success" (click)="ajouterLigne()"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
     </div>
+
+    <!-- Lignes ajoutées -->
     <div class="row mt-2 p-3 custom-border" style="max-height: 300px;overflow-y: scroll">
       <div class="col-md-12">
-        <app-details-cmd></app-details-cmd>
+        <p class="text-muted" *ngIf="lignes.length === 0">Aucun article ajouté. Recherchez un article puis cliquez sur +.</p>
+        <div class="row custom-border p-2 mb-1 font-weight-bold" *ngIf="lignes.length">
+          <div class="col-md-4">Article</div>
+          <div class="col-md-3 text-center">Qté</div>
+          <div class="col-md-3 text-center">Prix unitaire</div>
+          <div class="col-md-2 text-center">Action</div>
+        </div>
+        <div class="row custom-border p-2 mb-1" *ngFor="let ligne of lignes; let i = index">
+          <div class="col-md-4">{{ ligne.article?.codeArticle }} — {{ ligne.article?.designation }}</div>
+          <div class="col-md-3 text-center">{{ ligne.quantite }}</div>
+          <div class="col-md-3 text-center">{{ ligne.prixUnitaire }} F</div>
+          <div class="col-md-2 text-center">
+            <button type="button" class="btn btn-link text-danger p-0" (click)="retirerLigne(i)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-    <div class="row mt-2 p-3 custom-border ">
+
+    <div class="row mt-2 p-3 custom-border">
       <div class="col-md-12 text-right">
-        <h3>Total de la commande:  totalCommande </h3>
+        <h3>Total de la commande: {{ totalCommande() | number:'1.0-0' }} F</h3>
       </div>
     </div>
   </div>
   <div class="col-md-12 text-right mt-2">
-    <button class="btn btn-danger mr-3">
+    <button class="btn btn-danger mr-3" (click)="cancel()" [disabled]="enCours">
       <i class="fas fa-ban"></i>&nbsp;
       Annuler
     </button>
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="enregistrer()" [disabled]="enCours">
       <i class="fas fa-save"></i>&nbsp;
       Enregitrer
     </button>
   </div>
-
 </div>

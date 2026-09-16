@@ -9,21 +9,203 @@
           <app-menu></app-menu>
         </div>
       </div>
-      </div>
-        <div class="card col-md-10 pl-0 pr-0 backgroung-grey border-none">
-          <div class="col pl-0 pr-0 d-flex flex-column justify-content-between">
-            <div class="card p-3 min-height-80 mb-2">
-              <app-header></app-header>
-            </div>
-            <div class="card mb-2" style="min-height: 480px">
+    </div>
+    <div class="card col-md-10 pl-0 pr-0 backgroung-grey border-none">
+      <div class="col pl-0 pr-0 d-flex flex-column justify-content-between">
+        <div class="card p-3 min-height-80 mb-2">
+          <app-header></app-header>
+        </div>
+        <div class="card mb-2" style="min-height: 480px">
 
-              <router-outlet></router-outlet>
+          <!-- ======== CONTENU DASHBOARD (route racine) ======== -->
+          <div class="p-3" *ngIf="router.url === '/' || router.url === ''">
 
+            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
+              <div>
+                <h3 class="mb-0"><b>📊 Tableau de bord</b></h3>
+                <small class="text-muted">Bienvenue {{utilisateur?.nom}}, voici l'activité de votre entreprise</small>
+              </div>
+              <button class="btn btn-outline-primary btn-sm" (click)="charger()" [disabled]="loading">
+                <i class="fas fa-sync-alt" [ngClass]="{'fa-spin': loading}"></i> Actualiser
+              </button>
             </div>
-            <div class="card min-height-80">
-              footer
+
+            <!-- État de chargement / erreur -->
+            <div class="text-center py-5" *ngIf="loading && !data">
+              <div class="spinner-border text-primary" role="status"></div>
+              <p class="mt-2 text-muted">Chargement des statistiques…</p>
+            </div>
+            <div class="alert alert-danger" *ngIf="erreur">
+              {{erreur}}
+              <button class="btn btn-sm btn-outline-danger ml-2" (click)="charger()">Réessayer</button>
+            </div>
+
+            <div *ngIf="data">
+
+              <!-- KPI principaux -->
+              <div class="row mb-3">
+                <div class="col-md-3 col-sm-6 mb-2" *ngFor="let kpi of [
+                  {label: 'CA Total', valeur: formatMoney(data.chiffreAffairesTotal), icone: 'fas fa-wallet', couleur: 'primary', sub: data.nombreVentes + ' vente(s)'},
+                  {label: 'CA ce mois', valeur: formatMoney(data.chiffreAffairesMoisEnCours), icone: 'fas fa-calendar-alt', couleur: 'info', sub: 'Aujourd\'hui : ' + formatMoney(data.chiffreAffairesJourEnCours)},
+                  {label: 'Valeur du stock', valeur: formatMoney(data.valeurStock), icone: 'fas fa-boxes', couleur: 'success', sub: 'Marge moy. : ' + formatMoney(data.margeMoyenne)},
+                  {label: 'Alertes stock', valeur: data.stockSousSeuil, icone: 'fas fa-exclamation-triangle', couleur: data.stockSousSeuil > 0 ? 'danger' : 'secondary', sub: data.stockSousSeuil > 0 ? 'Réapprovisionnement requis' : 'Tout va bien ✓'}
+                ]">
+                  <div class="card kpi-card h-100 border-left-{{kpi.couleur}}" [ngClass]="'border-left-' + kpi.couleur">
+                    <div class="card-body d-flex align-items-center">
+                      <div class="kpi-icone bg-{{kpi.couleur}} text-white mr-3">
+                        <i class="{{kpi.icone}}"></i>
+                      </div>
+                      <div>
+                        <div class="kpi-valeur">{{kpi.valeur}}</div>
+                        <small class="text-muted">{{kpi.label}}</small>
+                        <div><small class="text-muted" style="font-size: 10px">{{kpi.sub}}</small></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Compteurs rapides + actions -->
+              <div class="row mb-3">
+                <div class="col-md-8">
+                  <div class="card h-100">
+                    <div class="card-header py-2"><b>🏢 Activité</b></div>
+                    <div class="card-body py-2">
+                      <div class="row text-center">
+                        <div class="col" routerLink="/client" style="cursor: pointer">
+                          <div class="compteur">{{data.nombreClients}}</div>
+                          <small class="text-muted"><i class="fas fa-users"></i> Clients</small>
+                        </div>
+                        <div class="col" routerLink="/fournisseurs" style="cursor: pointer">
+                          <div class="compteur">{{data.nombreFournisseurs}}</div>
+                          <small class="text-muted"><i class="fas fa-truck"></i> Fournisseurs</small>
+                        </div>
+                        <div class="col" routerLink="/articles" style="cursor: pointer">
+                          <div class="compteur">{{data.nombreArticles}}</div>
+                          <small class="text-muted"><i class="fas fa-boxes"></i> Articles</small>
+                        </div>
+                        <div class="col" routerLink="/commandeclient" style="cursor: pointer">
+                          <div class="compteur">{{data.nombreCommandesClient}}</div>
+                          <small class="text-muted"><i class="fas fa-shopping-basket"></i> Cmd clients</small>
+                        </div>
+                        <div class="col" routerLink="/commandefournissuer" style="cursor: pointer">
+                          <div class="compteur">{{data.nombreCommandesFournisseur}}</div>
+                          <small class="text-muted"><i class="fas fa-truck-loading"></i> Cmd fournisseurs</small>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card h-100">
+                    <div class="card-header py-2"><b>⚡ Actions rapides</b></div>
+                    <div class="card-body py-2 d-flex flex-column justify-content-around">
+                      <button class="btn btn-primary btn-sm mb-1" (click)="nouvelleVente()"><i class="fas fa-plus"></i> Nouvelle commande client</button>
+                      <button class="btn btn-outline-primary btn-sm mb-1" (click)="nouvelArticle()"><i class="fas fa-box-open"></i> Nouvel article</button>
+                      <button class="btn btn-outline-success btn-sm" (click)="nouveauClient()"><i class="fas fa-user-plus"></i> Nouveau client</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Graphique CA mensuel (barres CSS) + alertes -->
+              <div class="row">
+                <div class="col-md-8 mb-2">
+                  <div class="card h-100">
+                    <div class="card-header py-2 d-flex justify-content-between">
+                      <b>📈 Chiffre d'affaires {{anneeCourante}}</b>
+                      <span class="badge badge-primary" *ngIf="data.ventesParMois?.length">Meilleur mois : {{moisMaxLabel()}}</span>
+                    </div>
+                    <div class="card-body">
+                      <div class="chart-bars" *ngIf="data.ventesParMois?.length; else videVentes">
+                        <div class="chart-col" *ngFor="let val of serieMensuelle(); let i = index">
+                          <div class="chart-bar" [style.height.%]="(val / maxMensuel()) * 100"
+                               [ngClass]="{'chart-bar-max': val === maxMensuel() && val > 0}"
+                               [title]="moisLabel[i] + ' : ' + formatMoney(val)"></div>
+                          <small>{{moisLabel[i].substring(0,3)}}</small>
+                        </div>
+                      </div>
+                      <ng-template #videVentes>
+                        <p class="text-center text-muted py-4 mb-0">Aucune vente enregistrée cette année.</p>
+                      </ng-template>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4 mb-2">
+                  <div class="card h-100">
+                    <div class="card-header py-2"><b>🔔 Alertes & résumé</b></div>
+                    <div class="card-body py-2">
+                      <div class="alert alert-warning py-2 mb-2" *ngIf="data.stockSousSeuil > 0">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <b>{{data.stockSousSeuil}}</b> article(s) sous le seuil d'alerte.
+                        <div><a routerLink="/mvtstk">Voir les mouvements →</a></div>
+                      </div>
+                      <div class="alert alert-success py-2 mb-2" *ngIf="data.stockSousSeuil === 0">
+                        <i class="fas fa-check-circle"></i> Tous les articles sont au-dessus de leur seuil ✓
+                      </div>
+                      <ul class="list-unstyled mb-0 small">
+                        <li class="mb-1"><i class="fas fa-tag text-primary mr-1"></i> Top catégorie : <b>{{topCategorie()}}</b></li>
+                        <li class="mb-1"><i class="fas fa-user-tie text-primary mr-1"></i> Meilleur client : <b>{{topClient()}}</b></li>
+                        <li><i class="fas fa-percentage text-primary mr-1"></i> CA du jour / mois : <b>{{pourcentageCAJour()}}%</b></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Top articles + top clients -->
+              <div class="row mt-1">
+                <div class="col-md-6 mb-2">
+                  <div class="card h-100">
+                    <div class="card-header py-2"><b>🏆 Top articles</b></div>
+                    <div class="card-body py-2" *ngIf="data.topArticles?.length; else videTop">
+                      <div class="mb-2" *ngFor="let a of data.topArticles.slice(0, 5); let i = index">
+                        <div class="d-flex justify-content-between small">
+                          <span><span class="badge badge-dark mr-1">#{{i + 1}}</span> {{a.designation}}</span>
+                          <span class="text-muted">{{formatMoney(a.chiffreAffaires)}}</span>
+                        </div>
+                        <div class="progress" style="height: 5px">
+                          <div class="progress-bar bg-primary" [style.width.%]="pct(a.chiffreAffaires, data!.topArticles, 'chiffreAffaires')"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #videTop>
+                      <p class="text-center text-muted py-3 mb-0">Aucune vente pour le moment.</p>
+                    </ng-template>
+                  </div>
+                </div>
+                <div class="col-md-6 mb-2">
+                  <div class="card h-100">
+                    <div class="card-header py-2"><b>👑 Top clients</b></div>
+                    <div class="card-body py-2" *ngIf="data.commandesParClient?.length; else videClts">
+                      <div class="mb-2" *ngFor="let c of data.commandesParClient.slice(0, 5); let i = index">
+                        <div class="d-flex justify-content-between small">
+                          <span><span class="badge badge-dark mr-1">#{{i + 1}}</span>
+                            <span class="avatar-mini">{{initiales(c.nom, c.prenom)}}</span> {{c.prenom}} {{c.nom}}</span>
+                          <span class="text-muted">{{c.nombreCommandes}} cmd · {{formatMoney(c.montantTotal)}}</span>
+                        </div>
+                        <div class="progress" style="height: 5px">
+                          <div class="progress-bar bg-success" [style.width.%]="pct(c.montantTotal, data!.commandesParClient, 'montantTotal')"></div>
+                        </div>
+                      </div>
+                    </div>
+                    <ng-template #videClts>
+                      <p class="text-center text-muted py-3 mb-0">Aucune commande client enregistrée.</p>
+                    </ng-template>
+                  </div>
+                </div>
+              </div>
+
             </div>
           </div>
+
+          <router-outlet></router-outlet>
+
+        </div>
+        <div class="card min-height-80 p-0 border-0">
+          <app-footer></app-footer>
         </div>
       </div>
     </div>
+  </div>
+</div>

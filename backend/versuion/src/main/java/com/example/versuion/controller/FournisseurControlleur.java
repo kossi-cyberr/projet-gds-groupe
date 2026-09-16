@@ -1,6 +1,7 @@
 package com.example.versuion.controller;
 
 import com.example.versuion.Dto.FournisseurDto;
+import com.example.versuion.Dto.PageResponse;
 import com.example.versuion.controller.api.FournisseurApi;
 import com.example.versuion.services.FournisseurService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,11 @@ public class FournisseurControlleur implements FournisseurApi {
     }
 
     @Override
+    public FournisseurDto update(Long id, FournisseurDto dto) {
+        return fournisseurService.update(id, dto);
+    }
+
+    @Override
     public FournisseurDto findById(Long id) {
         return fournisseurService.findById(id);
     }
@@ -32,6 +38,11 @@ public class FournisseurControlleur implements FournisseurApi {
     @Override
     public List<FournisseurDto> findAll() {
         return fournisseurService.findAll();
+    }
+
+    @Override
+    public PageResponse<FournisseurDto> findAllPaginated(int page, int size, String sortBy, String sortDir, String search) {
+        return fournisseurService.findAllPaginated(page, size, sortBy, sortDir, search);
     }
 
     @Override

@@ -1,84 +1,73 @@
 <div class="col mb-3">
   <div class="col-md-12 mb-3 mt-3">
-    <button (click)="fileInput.click()" style="background-color: transparent; border: none;">
-      <img src="assets/product.png"  class="rounded-circle" width="200px" height="200px" />
-      <input hidden type="file" #fileInput >
-    </button>
+    <h2><i class="fas fa-info-circle blue-color"></i>&nbsp;{{ idAmodifier ? 'Modifier' : 'Nouveau' }} {{ origin === 'client' ? 'client' : 'fournisseur' }}</h2>
   </div>
-  <hr>
+  <div class="alert alert-danger" *ngIf="errorMsg.length > 0">
+    <div *ngFor="let msg of errorMsg">
+      {{ msg }}
+    </div>
+  </div>
   <div class="col-md-12">
-    <div class="col-md-12 mb-3">
-      <h2><i class="fas fa-info-circle blue-color"></i>&nbsp;Information du {{origin}}</h2>
-    </div>
-   <!---<div class="alert alert-danger" *ngIf="errorMsg.length > 0">
-      <div *ngFor="let msg of errorMsg">
-        {{ msg }}
+    <form>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Nom *"
+            name="nom" [(ngModel)]="form.nom">
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Adresse 1 *"
+            name="adresse1" [(ngModel)]="form.addresse1">
+        </div>
       </div>
-    </div>-->
-    <div class="col-md-12">
-      <form>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Nom"
-            name="nom" >
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Adresse 1"
-            name="adresse1" >
-          </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Prenom"
+            name="prenom" [(ngModel)]="form.prenom">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Prenom"
-            name="prenom"
-            >
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Adresse 2"
-                   name="adresse2" >
-          </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Adresse 2"
+                 name="adresse2" [(ngModel)]="form.addresse2">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="email" class="form-control" placeholder="E-mail"
-                   name="email" >
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Ville"
-                   name="ville" >
-          </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="email" class="form-control" placeholder="E-mail"
+                 name="email" [(ngModel)]="form.mail">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Telephone"
-                   name="numtel" >
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Code postal"
-                   name="codepostal" >
-          </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Ville *"
+                 name="ville" [(ngModel)]="form.Ville">
         </div>
-        <div class="row mb-3">
-          <div class="col">
-            &nbsp;
-          </div>
-          <div class="col">
-            <input type="text" class="form-control" placeholder="Pays"
-                   name="pays" >
-          </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Telephone"
+                 name="numtel" [(ngModel)]="form.numTel">
         </div>
-      </form>
-    </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Code postal *"
+                 name="codepostal" [(ngModel)]="form.codePostale">
+        </div>
+      </div>
+      <div class="row mb-3">
+        <div class="col">
+          &nbsp;
+        </div>
+        <div class="col">
+          <input type="text" class="form-control" placeholder="Pays *"
+                 name="pays" [(ngModel)]="form.pays">
+        </div>
+      </div>
+    </form>
   </div>
   <div class="col-md-12 text-right">
-    <button class="btn btn-danger mr-3" (click)="cancelClick()">
+    <button class="btn btn-danger mr-3" (click)="cancelClick()" [disabled]="enCours">
       <i class="fas fa-ban"></i>&nbsp;
       Annuler
     </button>
-    <button class="btn btn-primary">
+    <button class="btn btn-primary" (click)="enregistrer()" [disabled]="enCours">
       <i class="fas fa-save"></i>&nbsp;
       Enregitrer
     </button>
   </div>
-
 </div>
