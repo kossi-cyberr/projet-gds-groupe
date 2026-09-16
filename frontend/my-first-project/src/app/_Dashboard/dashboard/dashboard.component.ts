@@ -3,6 +3,8 @@ import { Router } from '@angular/router';
 import { Dashboard, MOIS_LABELS } from '../../Models/Dashboard';
 import { DashboardService } from '../../services/dashboard.service';
 import { UserService } from '../../services/user.service';
+import { ThemeService } from '../../services/theme.service';
+import { LanguageService } from '../../services/language.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -18,9 +20,14 @@ export class DashboardComponent implements OnInit {
   anneeCourante = new Date().getFullYear();
   utilisateur: any = {};
 
+  /** État du tiroir de navigation mobile. */
+  menuMobileOuvert = false;
+
   constructor(
     private dashboardService: DashboardService,
     private userService: UserService,
+    public theme: ThemeService,
+    public langueService: LanguageService,
     public router: Router
   ) {}
 
@@ -113,5 +120,54 @@ export class DashboardComponent implements OnInit {
 
   initiales(nom: string, prenom: string): string {
     return ((prenom?.[0] ?? '') + (nom?.[0] ?? '')).toUpperCase() || '?';
+  }
+
+  // ------------------------------------------------------------------
+  // Shell (sidebar / topbar / thème / langue)
+  // ------------------------------------------------------------------
+
+  ouvrirMenuMobile(): void {
+    this.menuMobileOuvert = true;
+  }
+
+  fermerMenuMobile(): void {
+    this.menuMobileOuvert = false;
+  }
+
+  basculerTheme(): void {
+    this.theme.toggle();
+  }
+
+  get estSombre(): boolean {
+    return this.theme.estSombre;
+  }
+
+  basculerLangue(): void {
+    this.langueService.basculer();
+  }
+
+  get langueCourante(): string {
+    return this.langueService.langue;
+  }
+
+  /** Traduction directe d'une clé dans le template. */
+  t(cle: string): string {
+    return this.langueService.t(cle);
+  }
+
+  /** URL de l'avatar (photo réelle ou null -> initiales). */
+  avatarUrl(): string | null {
+    return this.userService.photoUrl(this.utilisateur?.photo) ?? null;
+  }
+
+  initialesUtilisateur(): string {
+    return this.initiales(this.utilisateur?.nom ?? '', this.utilisateur?.prenom ?? '');
+  }
+
+  /** Déconnexion : purge du stockage local + redirection vers le login. */
+  deconnexion(): void {
+    localStorage.removeItem('accessToken');
+    localStorage.removeItem('utilisateur');
+    this.router.navigate(['/login']);
   }
 }

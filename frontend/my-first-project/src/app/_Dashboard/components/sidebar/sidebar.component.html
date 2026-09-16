@@ -1,0 +1,19 @@
+<nav class="flex h-full flex-col gap-1 p-3" aria-label="Navigation principale">
+  <ng-container *ngFor="let section of sections">
+    <p class="px-3 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wider text-base-content/50">
+      {{ t(section.cle) }}
+    </p>
+    <ul class="m-0 list-none p-0">
+      <li *ngFor="let item of section.items">
+        <a href="javascript:void(0)"
+           class="sidebar-link"
+           [class.active]="estActif(item)"
+           (click)="naviguer(item)"
+           [attr.aria-current]="estActif(item) ? 'page' : null">
+          <i-lucide [name]="item.icone" size="18" class="sidebar-icone"></i-lucide>
+          <span>{{ t(item.cle) }}</span>
+        </a>
+      </li>
+    </ul>
+  </ng-container>
+</nav>

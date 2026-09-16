@@ -1,13 +1,50 @@
-/* You can add global styles to this file, and also import other style files */
-body {
-  background-color: #eff2f5 !important;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------ */
+/* Base — typographie et surface                                       */
+/* ------------------------------------------------------------------ */
+html {
+  font-size: 16px;
 }
 
-.backgroung-grey {
-  background-color: #eff2f5 !important;
+body {
+  @apply bg-base-200 text-base-content font-sans antialiased;
 }
+
+/* Hiérarchie typographique commune à toutes les pages */
+.page-title {
+  @apply text-xl sm:text-2xl font-bold tracking-tight text-base-content;
+}
+
+.section-title {
+  @apply text-base font-semibold text-base-content;
+}
+
+.helper-text {
+  @apply text-sm text-base-content/60;
+}
+
+/* Focus clavier visible et cohérent */
+a:focus-visible,
+button:focus-visible,
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible {
+  @apply outline-none ring-2 ring-primary ring-offset-2 ring-offset-base-100;
+}
+
+/* ------------------------------------------------------------------ */
+/* Remap des classes legacy (les templates existants continuent de     */
+/* fonctionner, mais suivent désormais le thème Light/Dark)            */
+/* ------------------------------------------------------------------ */
+.backgroung-grey {
+  @apply bg-base-200;
+}
+
 .border-none {
-  border: none !important;
+  border: none;
 }
 
 .min-height-80 {
@@ -15,24 +52,26 @@ body {
 }
 
 .border-right {
-  border-right: solid #eff2f5;
+  @apply border-r border-base-300;
 }
+
 .custom-border-right {
-  border: solid #eff2f5;
-  border-radius: 5px;
+  @apply border border-base-300 rounded-md;
 }
+
 .custom-border {
-  border: solid #9ca1a6;
-  border-radius: 5px;
+  @apply border border-base-300 rounded-md;
 }
+
 .blue-color {
-  color: #037bfe;
+  @apply text-primary;
 }
 
 .hidden {
   display: none;
 }
 
+/* Loader linéaire (re-coloré avec le primary du thème) */
 .loader-overlay {
   position: absolute;
   width: 100%;
@@ -45,7 +84,7 @@ body {
   width: 100%;
   position: relative;
   overflow: hidden;
-  background-color: #FFF;
+  @apply bg-base-100;
 }
 
 .loader:before {
@@ -55,7 +94,7 @@ body {
   left: -200px;
   width: 200px;
   height: 10px;
-  background-color: #007bff;
+  @apply bg-primary;
   animation: loading 2s linear infinite;
 }
 
@@ -90,7 +129,7 @@ body {
   margin: 20px;
 }
 
+/* Alertes legacy : mappées sur les couleurs sémantiques du thème */
 .alerts {
-  margin: 20px 0;
-  color: red;
+  @apply my-5 text-error;
 }

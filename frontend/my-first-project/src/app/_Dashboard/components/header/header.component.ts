@@ -26,14 +26,6 @@ export class HeaderComponent implements DoCheck, OnInit {
     this.connectedUser = this.userService.getConnectedUser();
   }
 
-  /** Rafraîchit l'utilisateur depuis l'API (pour la photo de profil à jour). */
-  rafraichirUtilisateur(): void {
-    this.userService.refreshConnectedUser().subscribe(
-      (utilisateur: Utilisateur) => this.userService.setUtilisateur(utilisateur),
-      () => { /* silencieux : header non bloquant */ }
-    );
-  }
-
   ngOnInit(): void {
     this.chargerArticles();
   }
@@ -77,18 +69,5 @@ export class HeaderComponent implements DoCheck, OnInit {
   voirTousLesResultats(): void {
     this.afficherSuggestions = false;
     this.router.navigate(['/articles'], { queryParams: { q: this.recherche } });
-  }
-
-  /** URL de l'avatar de l'utilisateur connecté (photo réelle ou favicon par défaut). */
-  avatarUrl(): string {
-    const url = this.userService.photoUrl(this.connectedUser?.photo);
-    return url ?? 'favicon.ico';
-  }
-
-  /** Déconnexion : purge du stockage local + redirection vers le login. */
-  deconnexion(): void {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('utilisateur');
-    this.router.navigate(['/login']);
   }
 }

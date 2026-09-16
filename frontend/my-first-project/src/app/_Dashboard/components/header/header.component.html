@@ -1,18 +1,17 @@
-<div class="row">
-  <div class="col-md-8 position-relative">
-    <div class="input-group flex-nowrap">
-      <input type="text" class="form-control" placeholder="Rechercher un article (désignation ou code)…"
+<div class="flex w-full items-center gap-3">
+  <div class="position-relative min-w-0 flex-1">
+    <label class="input-group input-group-sm w-full">
+      <input type="text" class="input input-bordered input-sm w-full"
+             placeholder="Rechercher un article (désignation ou code)…"
              aria-label="Recherche" [(ngModel)]="recherche" (ngModelChange)="onRecherche()"
              (focus)="afficherSuggestions = suggestions.length > 0"
              (blur)="fermerSuggestionsPlusTard()">
-      <div class="input-group-prepend">
-        <span class="input-group-text"><i class="fas fa-search"></i></span>
-      </div>
-    </div>
+      <span class="input-group-text bg-base-300"><i class="fas fa-search"></i></span>
+    </label>
 
     <div class="suggestions shadow" *ngIf="afficherSuggestions && suggestions.length > 0">
       <button type="button" class="suggestion-item" *ngFor="let a of suggestions" (mousedown)="ouvrirArticle(a)">
-        <i class="fas fa-box mr-2 text-muted"></i>
+        <i class="fas fa-box mr-2 text-base-content/50"></i>
         <b>{{a.codeArticle}}</b> — {{a.designation}}
       </button>
       <button type="button" class="suggestion-item suggestion-tous" (mousedown)="voirTousLesResultats()">
@@ -20,25 +19,7 @@
       </button>
     </div>
   </div>
-  <div class="col-md-4">
-    <div class="row">
-      <div class="col-md-7 text-right">
-        <span>Bonjour {{connectedUser.nom}}&nbsp;</span>
-      </div>
-      <div class="col-md-2 text-center">
-        <button type="button" class="btn btn-link text-danger p-0" title="Se déconnecter" (click)="deconnexion()">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>
-
-      <div class="col-md-3">
-        <a href="javascript:void(0);" [routerLink]="['/profile']">
-          <img *ngIf="connectedUser?.photo; else avatarDefaut" [src]="avatarUrl()" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;" />
-          <ng-template #avatarDefaut>
-            <img src="favicon.ico" class="rounded-circle" style="width:40px;height:40px;object-fit:cover;" />
-          </ng-template>
-        </a>
-      </div>
-    </div>
-  </div>
+  <span class="hidden shrink-0 text-sm text-base-content/70 sm:inline">
+    Bonjour {{connectedUser.nom}}
+  </span>
 </div>

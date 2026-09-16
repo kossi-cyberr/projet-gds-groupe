@@ -1,22 +1,64 @@
-<div class="container my-container">
-<div class="card justify-content-md-center">
-  <div class="card-header">
-   Se connecter
+<div class="flex min-h-screen items-center justify-center bg-base-200 px-4">
+  <div class="w-full max-w-md">
+    <div class="mb-3 flex justify-end gap-1">
+      <button type="button" class="btn btn-ghost btn-sm btn-circle"
+              (click)="basculerTheme()"
+              [attr.aria-label]="estSombre ? 'Activer le thème clair' : 'Activer le thème sombre'"
+              [title]="estSombre ? 'Thème clair' : 'Thème sombre'">
+        <i-lucide [name]="estSombre ? 'sun' : 'moon'" size="18"></i-lucide>
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm gap-1.5" (click)="basculerLangue()" aria-label="Changer la langue" title="Français / English">
+        <i-lucide name="languages" size="18"></i-lucide>
+        <span class="text-xs font-semibold uppercase">{{ langueCourante }}</span>
+      </button>
+    </div>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <div class="mb-4 flex items-center gap-3">
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-content">
+            <i-lucide name="boxes" size="24"></i-lucide>
+          </div>
+          <div>
+            <h1 class="mb-0 text-lg font-bold">{{ t('app.brand') }}</h1>
+            <p class="mb-0 text-xs text-base-content/50">{{ t('app.clinic') }}</p>
+          </div>
+        </div>
+
+        <div class="alert alert-error py-2 text-sm" *ngIf="errorMessage" role="alert">
+          <i class="fas fa-circle-exclamation"></i>
+          <span>{{errorMessage}}</span>
+        </div>
+
+        <div class="form-control mb-3">
+          <label class="label py-1" for="login-email">
+            <span class="label-text font-medium">Email</span>
+          </label>
+          <input id="login-email" type="email" class="input input-bordered w-full"
+                 placeholder="name@example.com" autocomplete="email"
+                 [(ngModel)]="authenticationRequest.login" name="login"
+                 (keyup.enter)="login()">
+        </div>
+
+        <div class="form-control mb-4">
+          <label class="label py-1" for="login-password">
+            <span class="label-text font-medium">Mot de passe</span>
+          </label>
+          <input id="login-password" type="password" class="input input-bordered w-full"
+                 placeholder="••••••••" autocomplete="current-password"
+                 [(ngModel)]="authenticationRequest.password" name="password"
+                 (keyup.enter)="login()">
+        </div>
+
+        <button type="button" class="btn btn-primary w-full" (click)="login()" [disabled]="chargement">
+          <span *ngIf="chargement" class="loading loading-spinner loading-sm"></span>
+          <span>{{ chargement ? 'Connexion…' : 'Se connecter' }}</span>
+        </button>
+
+        <div class="mt-4 text-center">
+          <a class="link link-primary text-sm" [routerLink]="['/inscrire']">Pas encore de compte ? S'inscrire</a>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="card-body">
-    <div class="alert alert-danger" *ngIf="errorMessage">
-      {{errorMessage}}
-    </div>
-    <div class="mb-3">
-      <input type="email" class="form-control"  placeholder="name@example.com" [(ngModel)] = "authenticationRequest.login">
-    </div>
-    <div class="mb-3">
-      <input type="password" class="form-control" placeholder="Password" [(ngModel)] = "authenticationRequest.password">
-    </div>
-    <div class="mb-3 d-flex justify-content-between">
-      <a class="btn btn-link" [routerLink]="['/inscrire']">S'inscire</a>
-      <button type="button" class="btn btn-primary" (click)="login()"><i class="fas fa-check"></i>&nbsp;Se connecter</button>
-    </div>
-  </div>
-</div>
 </div>

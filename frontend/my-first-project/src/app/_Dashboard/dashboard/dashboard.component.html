@@ -1,211 +1,249 @@
-<div class="main-container">
-  <div class="row min-height-600 no-flex-wrap">
-    <div class="card col-md-2 mr-2">
-      <div class="col">
-        <div>
-          <h1 style="text-align: center;"><b>Gestion de stock</b></h1>
-        </div>
-        <div>
-          <app-menu></app-menu>
-        </div>
+<div class="flex min-h-screen bg-base-200">
+
+  <!-- ===== Sidebar desktop ===== -->
+  <aside class="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-r border-base-300 bg-base-100 lg:flex">
+    <div class="flex items-center gap-3 border-b border-base-300 px-5 py-4">
+      <div class="flex h-9 w-9 items-center justify-center rounded-xl bg-primary text-primary-content">
+        <i-lucide name="boxes" size="20"></i-lucide>
+      </div>
+      <div class="min-w-0">
+        <p class="truncate text-sm font-bold">{{ t('app.brand') }}</p>
+        <p class="truncate text-[10px] uppercase tracking-widest text-base-content/50">{{ t('app.clinic') }}</p>
       </div>
     </div>
-    <div class="card col-md-10 pl-0 pr-0 backgroung-grey border-none">
-      <div class="col pl-0 pr-0 d-flex flex-column justify-content-between">
-        <div class="card p-3 min-height-80 mb-2">
-          <app-header></app-header>
+    <div class="min-h-0 flex-1 overflow-y-auto">
+      <app-sidebar></app-sidebar>
+    </div>
+    <div class="border-t border-base-300 p-3">
+      <a routerLink="/profile" class="mb-2 flex items-center gap-3 rounded-xl bg-base-200 p-2.5 transition hover:bg-base-300">
+        <img *ngIf="utilisateur?.photo; else avatarDefaut" [src]="avatarUrl()" alt="Avatar"
+             class="h-9 w-9 shrink-0 rounded-full object-cover" />
+        <ng-template #avatarDefaut>
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary text-xs font-bold text-primary-content">
+            {{ initialesUtilisateur() }}
+          </div>
+        </ng-template>
+        <div class="min-w-0">
+          <p class="truncate text-xs font-semibold">{{ utilisateur?.prenom }} {{ utilisateur?.nom }}</p>
+          <p class="truncate text-[10px] text-base-content/50">{{ utilisateur?.email }}</p>
         </div>
-        <div class="card mb-2" style="min-height: 480px">
+      </a>
+      <button type="button" class="btn btn-ghost btn-sm w-full justify-start gap-2 text-error" (click)="deconnexion()">
+        <i-lucide name="log-out" size="16"></i-lucide>
+        {{ t('app.logout') }}
+      </button>
+    </div>
+  </aside>
 
-          <!-- ======== CONTENU DASHBOARD (route racine) ======== -->
-          <div class="p-3" *ngIf="router.url === '/' || router.url === ''">
+  <!-- ===== Tiroir mobile ===== -->
+  <div class="fixed inset-0 z-40 lg:hidden" [class.hidden]="!menuMobileOuvert">
+    <div class="absolute inset-0 bg-black/50" (click)="fermerMenuMobile()" aria-hidden="true"></div>
+    <aside class="absolute inset-y-0 left-0 flex w-64 flex-col bg-base-100 shadow-xl" role="dialog" aria-modal="true" aria-label="Menu de navigation">
+      <div class="flex items-center justify-between border-b border-base-300 px-4 py-4">
+        <span class="text-sm font-bold">{{ t('app.brand') }}</span>
+        <button type="button" class="btn btn-ghost btn-sm btn-circle" (click)="fermerMenuMobile()" aria-label="Fermer le menu">
+          <i-lucide name="x" size="18"></i-lucide>
+        </button>
+      </div>
+      <div class="min-h-0 flex-1 overflow-y-auto">
+        <app-sidebar></app-sidebar>
+      </div>
+    </aside>
+  </div>
 
-            <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
-              <div>
-                <h3 class="mb-0"><b>📊 Tableau de bord</b></h3>
-                <small class="text-muted">Bienvenue {{utilisateur?.nom}}, voici l'activité de votre entreprise</small>
-              </div>
-              <button class="btn btn-outline-primary btn-sm" (click)="charger()" [disabled]="loading">
-                <i class="fas fa-sync-alt" [ngClass]="{'fa-spin': loading}"></i> Actualiser
-              </button>
-            </div>
+  <!-- ===== Colonne principale ===== -->
+  <div class="flex min-w-0 flex-1 flex-col">
 
-            <!-- État de chargement / erreur -->
-            <div class="text-center py-5" *ngIf="loading && !data">
-              <div class="spinner-border text-primary" role="status"></div>
-              <p class="mt-2 text-muted">Chargement des statistiques…</p>
-            </div>
-            <div class="alert alert-danger" *ngIf="erreur">
-              {{erreur}}
-              <button class="btn btn-sm btn-outline-danger ml-2" (click)="charger()">Réessayer</button>
-            </div>
+    <!-- Barre supérieure -->
+    <header class="sticky top-0 z-30 flex items-center gap-2 border-b border-base-300 bg-base-100/95 px-3 py-3 backdrop-blur sm:gap-3 sm:px-6">
+      <button type="button" class="btn btn-ghost btn-sm btn-circle shrink-0 lg:hidden" (click)="ouvrirMenuMobile()" aria-label="Ouvrir le menu">
+        <i-lucide name="menu" size="20"></i-lucide>
+      </button>
+      <app-header class="min-w-0 flex-1"></app-header>
+      <button type="button" class="btn btn-ghost btn-sm btn-circle shrink-0"
+              (click)="basculerTheme()"
+              [attr.aria-label]="estSombre ? 'Activer le thème clair' : 'Activer le thème sombre'"
+              [title]="estSombre ? 'Thème clair' : 'Thème sombre'">
+        <i-lucide [name]="estSombre ? 'sun' : 'moon'" size="18"></i-lucide>
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm shrink-0 gap-1.5" (click)="basculerLangue()" aria-label="Changer la langue" title="Français / English">
+        <i-lucide name="languages" size="18"></i-lucide>
+        <span class="text-xs font-semibold uppercase">{{ langueCourante }}</span>
+      </button>
+    </header>
 
-            <div *ngIf="data">
+    <!-- Contenu -->
+    <main class="flex-1 px-3 py-5 sm:px-6 sm:py-6 lg:px-8">
 
-              <!-- KPI principaux -->
-              <div class="row mb-3">
-                <div class="col-md-3 col-sm-6 mb-2" *ngFor="let kpi of [
-                  {label: 'CA Total', valeur: formatMoney(data.chiffreAffairesTotal), icone: 'fas fa-wallet', couleur: 'primary', sub: data.nombreVentes + ' vente(s)'},
-                  {label: 'CA ce mois', valeur: formatMoney(data.chiffreAffairesMoisEnCours), icone: 'fas fa-calendar-alt', couleur: 'info', sub: 'Aujourd\'hui : ' + formatMoney(data.chiffreAffairesJourEnCours)},
-                  {label: 'Valeur du stock', valeur: formatMoney(data.valeurStock), icone: 'fas fa-boxes', couleur: 'success', sub: 'Marge moy. : ' + formatMoney(data.margeMoyenne)},
-                  {label: 'Alertes stock', valeur: data.stockSousSeuil, icone: 'fas fa-exclamation-triangle', couleur: data.stockSousSeuil > 0 ? 'danger' : 'secondary', sub: data.stockSousSeuil > 0 ? 'Réapprovisionnement requis' : 'Tout va bien ✓'}
-                ]">
-                  <div class="card kpi-card h-100 border-left-{{kpi.couleur}}" [ngClass]="'border-left-' + kpi.couleur">
-                    <div class="card-body d-flex align-items-center">
-                      <div class="kpi-icone bg-{{kpi.couleur}} text-white mr-3">
-                        <i class="{{kpi.icone}}"></i>
-                      </div>
-                      <div>
-                        <div class="kpi-valeur">{{kpi.valeur}}</div>
-                        <small class="text-muted">{{kpi.label}}</small>
-                        <div><small class="text-muted" style="font-size: 10px">{{kpi.sub}}</small></div>
-                      </div>
-                    </div>
-                  </div>
+      <!-- ===== Route racine : tableau de bord ===== -->
+      <section *ngIf="router.url === '/' || router.url === ''">
+
+        <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h1 class="page-title mb-0">Tableau de bord</h1>
+            <p class="helper-text mb-0">Bienvenue {{utilisateur?.nom}}, voici l'activité de votre entreprise</p>
+          </div>
+          <button class="btn btn-outline btn-sm" (click)="charger()" [disabled]="loading">
+            <i class="fas fa-sync-alt" [ngClass]="{'fa-spin': loading}"></i> Actualiser
+          </button>
+        </div>
+
+        <!-- État de chargement / erreur -->
+        <div class="py-10 text-center" *ngIf="loading && !data">
+          <span class="loading loading-spinner loading-lg text-primary"></span>
+          <p class="helper-text mt-3">Chargement des statistiques…</p>
+        </div>
+        <div class="alert alert-error mb-4" *ngIf="erreur">
+          <i class="fas fa-exclamation-circle"></i>
+          <span>{{erreur}}</span>
+          <button class="btn btn-sm btn-outline" (click)="charger()">Réessayer</button>
+        </div>
+
+        <div *ngIf="data">
+
+          <!-- KPI principaux -->
+          <div class="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
+            <div class="card h-full bg-base-100 shadow-sm" *ngFor="let kpi of [
+              {label: 'CA Total', valeur: formatMoney(data.chiffreAffairesTotal), icone: 'fas fa-wallet', couleur: 'primary', sub: data.nombreVentes + ' vente(s)'},
+              {label: 'CA ce mois', valeur: formatMoney(data.chiffreAffairesMoisEnCours), icone: 'fas fa-calendar-alt', couleur: 'info', sub: 'Aujourd\'hui : ' + formatMoney(data.chiffreAffairesJourEnCours)},
+              {label: 'Valeur du stock', valeur: formatMoney(data.valeurStock), icone: 'fas fa-boxes', couleur: 'success', sub: 'Marge moy. : ' + formatMoney(data.margeMoyenne)},
+              {label: 'Alertes stock', valeur: data.stockSousSeuil, icone: 'fas fa-triangle-exclamation', couleur: data.stockSousSeuil > 0 ? 'danger' : 'secondary', sub: data.stockSousSeuil > 0 ? 'Réapprovisionnement requis' : 'Tout va bien ✓'}
+            ]">
+              <div class="card-body flex-row items-center gap-3 p-4">
+                <div class="kpi-icone" [ngClass]="'kpi-' + kpi.couleur">
+                  <i class="{{kpi.icone}}"></i>
+                </div>
+                <div class="min-w-0">
+                  <div class="kpi-valeur">{{kpi.valeur}}</div>
+                  <small class="text-base-content/60">{{kpi.label}}</small>
+                  <div><small class="text-base-content/50" style="font-size:10px">{{kpi.sub}}</small></div>
                 </div>
               </div>
-
-              <!-- Compteurs rapides + actions -->
-              <div class="row mb-3">
-                <div class="col-md-8">
-                  <div class="card h-100">
-                    <div class="card-header py-2"><b>🏢 Activité</b></div>
-                    <div class="card-body py-2">
-                      <div class="row text-center">
-                        <div class="col" routerLink="/client" style="cursor: pointer">
-                          <div class="compteur">{{data.nombreClients}}</div>
-                          <small class="text-muted"><i class="fas fa-users"></i> Clients</small>
-                        </div>
-                        <div class="col" routerLink="/fournisseurs" style="cursor: pointer">
-                          <div class="compteur">{{data.nombreFournisseurs}}</div>
-                          <small class="text-muted"><i class="fas fa-truck"></i> Fournisseurs</small>
-                        </div>
-                        <div class="col" routerLink="/articles" style="cursor: pointer">
-                          <div class="compteur">{{data.nombreArticles}}</div>
-                          <small class="text-muted"><i class="fas fa-boxes"></i> Articles</small>
-                        </div>
-                        <div class="col" routerLink="/commandeclient" style="cursor: pointer">
-                          <div class="compteur">{{data.nombreCommandesClient}}</div>
-                          <small class="text-muted"><i class="fas fa-shopping-basket"></i> Cmd clients</small>
-                        </div>
-                        <div class="col" routerLink="/commandefournissuer" style="cursor: pointer">
-                          <div class="compteur">{{data.nombreCommandesFournisseur}}</div>
-                          <small class="text-muted"><i class="fas fa-truck-loading"></i> Cmd fournisseurs</small>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4">
-                  <div class="card h-100">
-                    <div class="card-header py-2"><b>⚡ Actions rapides</b></div>
-                    <div class="card-body py-2 d-flex flex-column justify-content-around">
-                      <button class="btn btn-primary btn-sm mb-1" (click)="nouvelleVente()"><i class="fas fa-plus"></i> Nouvelle commande client</button>
-                      <button class="btn btn-outline-primary btn-sm mb-1" (click)="nouvelArticle()"><i class="fas fa-box-open"></i> Nouvel article</button>
-                      <button class="btn btn-outline-success btn-sm" (click)="nouveauClient()"><i class="fas fa-user-plus"></i> Nouveau client</button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Graphique CA mensuel (barres CSS) + alertes -->
-              <div class="row">
-                <div class="col-md-8 mb-2">
-                  <div class="card h-100">
-                    <div class="card-header py-2 d-flex justify-content-between">
-                      <b>📈 Chiffre d'affaires {{anneeCourante}}</b>
-                      <span class="badge badge-primary" *ngIf="data.ventesParMois?.length">Meilleur mois : {{moisMaxLabel()}}</span>
-                    </div>
-                    <div class="card-body">
-                      <div class="chart-bars" *ngIf="data.ventesParMois?.length; else videVentes">
-                        <div class="chart-col" *ngFor="let val of serieMensuelle(); let i = index">
-                          <div class="chart-bar" [style.height.%]="(val / maxMensuel()) * 100"
-                               [ngClass]="{'chart-bar-max': val === maxMensuel() && val > 0}"
-                               [title]="moisLabel[i] + ' : ' + formatMoney(val)"></div>
-                          <small>{{moisLabel[i].substring(0,3)}}</small>
-                        </div>
-                      </div>
-                      <ng-template #videVentes>
-                        <p class="text-center text-muted py-4 mb-0">Aucune vente enregistrée cette année.</p>
-                      </ng-template>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-md-4 mb-2">
-                  <div class="card h-100">
-                    <div class="card-header py-2"><b>🔔 Alertes & résumé</b></div>
-                    <div class="card-body py-2">
-                      <div class="alert alert-warning py-2 mb-2" *ngIf="data.stockSousSeuil > 0">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        <b>{{data.stockSousSeuil}}</b> article(s) sous le seuil d'alerte.
-                        <div><a routerLink="/mvtstk">Voir les mouvements →</a></div>
-                      </div>
-                      <div class="alert alert-success py-2 mb-2" *ngIf="data.stockSousSeuil === 0">
-                        <i class="fas fa-check-circle"></i> Tous les articles sont au-dessus de leur seuil ✓
-                      </div>
-                      <ul class="list-unstyled mb-0 small">
-                        <li class="mb-1"><i class="fas fa-tag text-primary mr-1"></i> Top catégorie : <b>{{topCategorie()}}</b></li>
-                        <li class="mb-1"><i class="fas fa-user-tie text-primary mr-1"></i> Meilleur client : <b>{{topClient()}}</b></li>
-                        <li><i class="fas fa-percentage text-primary mr-1"></i> CA du jour / mois : <b>{{pourcentageCAJour()}}%</b></li>
-                      </ul>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Top articles + top clients -->
-              <div class="row mt-1">
-                <div class="col-md-6 mb-2">
-                  <div class="card h-100">
-                    <div class="card-header py-2"><b>🏆 Top articles</b></div>
-                    <div class="card-body py-2" *ngIf="data.topArticles?.length; else videTop">
-                      <div class="mb-2" *ngFor="let a of data.topArticles.slice(0, 5); let i = index">
-                        <div class="d-flex justify-content-between small">
-                          <span><span class="badge badge-dark mr-1">#{{i + 1}}</span> {{a.designation}}</span>
-                          <span class="text-muted">{{formatMoney(a.chiffreAffaires)}}</span>
-                        </div>
-                        <div class="progress" style="height: 5px">
-                          <div class="progress-bar bg-primary" [style.width.%]="pct(a.chiffreAffaires, data!.topArticles, 'chiffreAffaires')"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <ng-template #videTop>
-                      <p class="text-center text-muted py-3 mb-0">Aucune vente pour le moment.</p>
-                    </ng-template>
-                  </div>
-                </div>
-                <div class="col-md-6 mb-2">
-                  <div class="card h-100">
-                    <div class="card-header py-2"><b>👑 Top clients</b></div>
-                    <div class="card-body py-2" *ngIf="data.commandesParClient?.length; else videClts">
-                      <div class="mb-2" *ngFor="let c of data.commandesParClient.slice(0, 5); let i = index">
-                        <div class="d-flex justify-content-between small">
-                          <span><span class="badge badge-dark mr-1">#{{i + 1}}</span>
-                            <span class="avatar-mini">{{initiales(c.nom, c.prenom)}}</span> {{c.prenom}} {{c.nom}}</span>
-                          <span class="text-muted">{{c.nombreCommandes}} cmd · {{formatMoney(c.montantTotal)}}</span>
-                        </div>
-                        <div class="progress" style="height: 5px">
-                          <div class="progress-bar bg-success" [style.width.%]="pct(c.montantTotal, data!.commandesParClient, 'montantTotal')"></div>
-                        </div>
-                      </div>
-                    </div>
-                    <ng-template #videClts>
-                      <p class="text-center text-muted py-3 mb-0">Aucune commande client enregistrée.</p>
-                    </ng-template>
-                  </div>
-                </div>
-              </div>
-
             </div>
           </div>
 
-          <router-outlet></router-outlet>
+          <!-- Compteurs rapides + actions -->
+          <div class="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div class="card bg-base-100 shadow-sm lg:col-span-2">
+              <div class="card-header py-2.5 font-semibold">🏢 Activité</div>
+              <div class="card-body grid grid-cols-2 gap-2 py-3 text-center sm:grid-cols-3 md:grid-cols-5">
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/client">
+                  <div class="compteur">{{data.nombreClients}}</div>
+                  <small class="text-base-content/60"><i class="fas fa-users"></i> Clients</small>
+                </div>
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/fournisseurs">
+                  <div class="compteur">{{data.nombreFournisseurs}}</div>
+                  <small class="text-base-content/60"><i class="fas fa-truck"></i> Fournisseurs</small>
+                </div>
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/articles">
+                  <div class="compteur">{{data.nombreArticles}}</div>
+                  <small class="text-base-content/60"><i class="fas fa-boxes"></i> Articles</small>
+                </div>
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/commandeclient">
+                  <div class="compteur">{{data.nombreCommandesClient}}</div>
+                  <small class="text-base-content/60"><i class="fas fa-basket-shopping"></i> Cmd clients</small>
+                </div>
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/commandefournissuer">
+                  <div class="compteur">{{data.nombreCommandesFournisseur}}</div>
+                  <small class="text-base-content/60"><i class="fas fa-truck-ramp-box"></i> Cmd fournisseurs</small>
+                </div>
+              </div>
+            </div>
+            <div class="card bg-base-100 shadow-sm">
+              <div class="card-header py-2.5 font-semibold">⚡ Actions rapides</div>
+              <div class="card-body flex flex-col justify-around gap-2 py-3">
+                <button class="btn btn-primary btn-sm" (click)="nouvelleVente()"><i class="fas fa-plus"></i> Nouvelle commande client</button>
+                <button class="btn btn-outline btn-sm" (click)="nouvelArticle()"><i class="fas fa-box-open"></i> Nouvel article</button>
+                <button class="btn btn-success btn-sm" (click)="nouveauClient()"><i class="fas fa-user-plus"></i> Nouveau client</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Graphique CA mensuel + alertes -->
+          <div class="mb-4 grid grid-cols-1 gap-3 lg:grid-cols-3">
+            <div class="card h-full bg-base-100 shadow-sm lg:col-span-2">
+              <div class="card-header flex items-center justify-between py-2.5">
+                <b>📈 Chiffre d'affaires {{anneeCourante}}</b>
+                <span class="badge badge-primary badge-sm" *ngIf="data.ventesParMois?.length">Meilleur mois : {{moisMaxLabel()}}</span>
+              </div>
+              <div class="card-body py-3">
+                <div class="chart-bars" *ngIf="data.ventesParMois?.length; else videVentes">
+                  <div class="chart-col" *ngFor="let val of serieMensuelle(); let i = index">
+                    <div class="chart-bar" [style.height.%]="(val / maxMensuel()) * 100"
+                         [ngClass]="{'chart-bar-max': val === maxMensuel() && val > 0}"
+                         [title]="moisLabel[i] + ' : ' + formatMoney(val)"></div>
+                    <small>{{moisLabel[i].substring(0,3)}}</small>
+                  </div>
+                </div>
+                <ng-template #videVentes>
+                  <p class="helper-text py-6 text-center">Aucune vente enregistrée cette année.</p>
+                </ng-template>
+              </div>
+            </div>
+            <div class="card h-full bg-base-100 shadow-sm">
+              <div class="card-header py-2.5 font-semibold">🔔 Alertes &amp; résumé</div>
+              <div class="card-body py-3">
+                <div class="alert alert-warning py-2 mb-2" *ngIf="data.stockSousSeuil > 0">
+                  <i class="fas fa-triangle-exclamation"></i>
+                  <span><b>{{data.stockSousSeuil}}</b> article(s) sous le seuil d'alerte.
+                  <a routerLink="/mvtstk" class="link link-primary">Voir les mouvements →</a></span>
+                </div>
+                <div class="alert alert-success py-2 mb-2" *ngIf="data.stockSousSeuil === 0">
+                  <i class="fas fa-circle-check"></i>
+                  <span>Tous les articles sont au-dessus de leur seuil ✓</span>
+                </div>
+                <ul class="mb-0 list-none p-0 text-sm">
+                  <li class="mb-1"><i class="fas fa-tag text-primary mr-1"></i> Top catégorie : <b>{{topCategorie()}}</b></li>
+                  <li class="mb-1"><i class="fas fa-user-tie text-primary mr-1"></i> Meilleur client : <b>{{topClient()}}</b></li>
+                  <li><i class="fas fa-percent text-primary mr-1"></i> CA du jour / mois : <b>{{pourcentageCAJour()}}%</b></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <!-- Top articles + top clients -->
+          <div class="grid grid-cols-1 gap-3 md:grid-cols-2">
+            <div class="card h-full bg-base-100 shadow-sm">
+              <div class="card-header py-2.5 font-semibold">🏆 Top articles</div>
+              <div class="card-body py-3" *ngIf="data.topArticles?.length; else videTop">
+                <div class="mb-2" *ngFor="let a of data.topArticles.slice(0, 5); let i = index">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="min-w-0 truncate"><span class="badge badge-neutral badge-sm mr-1">#{{i + 1}}</span> {{a.designation}}</span>
+                    <span class="text-base-content/60">{{formatMoney(a.chiffreAffaires)}}</span>
+                  </div>
+                  <progress class="progress progress-primary h-1" [value]="pct(a.chiffreAffaires, data!.topArticles, 'chiffreAffaires')" max="100"></progress>
+                </div>
+              </div>
+              <ng-template #videTop>
+                <p class="helper-text py-4 text-center">Aucune vente pour le moment.</p>
+              </ng-template>
+            </div>
+            <div class="card h-full bg-base-100 shadow-sm">
+              <div class="card-header py-2.5 font-semibold">👑 Top clients</div>
+              <div class="card-body py-3" *ngIf="data.commandesParClient?.length; else videClts">
+                <div class="mb-2" *ngFor="let c of data.commandesParClient.slice(0, 5); let i = index">
+                  <div class="flex items-center justify-between text-sm">
+                    <span class="min-w-0 truncate"><span class="badge badge-neutral badge-sm mr-1">#{{i + 1}}</span>
+                      <span class="avatar-mini">{{initiales(c.nom, c.prenom)}}</span> {{c.prenom}} {{c.nom}}</span>
+                    <span class="text-base-content/60">{{c.nombreCommandes}} cmd · {{formatMoney(c.montantTotal)}}</span>
+                  </div>
+                  <progress class="progress progress-success h-1" [value]="pct(c.montantTotal, data!.commandesParClient, 'montantTotal')" max="100"></progress>
+                </div>
+              </div>
+              <ng-template #videClts>
+                <p class="helper-text py-4 text-center">Aucune commande client enregistrée.</p>
+              </ng-template>
+            </div>
+          </div>
 
         </div>
-        <div class="card min-height-80 p-0 border-0">
-          <app-footer></app-footer>
-        </div>
-      </div>
-    </div>
+      </section>
+
+      <router-outlet></router-outlet>
+    </main>
+
+    <footer class="border-t border-base-300 bg-base-100">
+      <app-footer></app-footer>
+    </footer>
   </div>
 </div>

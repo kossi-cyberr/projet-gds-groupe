@@ -40,6 +40,27 @@ import { DetailUtilisateurComponent } from './_Dashboard/components/detail-utili
 import { ProfileComponent } from './_Dashboard/_Pages/profile/profile/profile.component';
 import { ChangerMotDepasseComponent } from './_Dashboard/_Pages/profile/changer-mot-depasse/changer-mot-depasse.component';
 import { AuthInterceptor } from './auth/intercptor/auth.interceptor';
+import { SidebarComponent } from './_Dashboard/components/sidebar/sidebar.component';
+import {
+  LucideAngularModule,
+  LayoutDashboard,
+  TrendingUp,
+  Package,
+  ArrowLeftRight,
+  Users,
+  ShoppingCart,
+  Truck,
+  Building2,
+  Tags,
+  UserCog,
+  Boxes,
+  Sun,
+  Moon,
+  Languages,
+  LogOut,
+  Menu,
+  X
+} from 'lucide-angular';
 @NgModule({
   declarations: [
     AppComponent,
@@ -73,7 +94,8 @@ import { AuthInterceptor } from './auth/intercptor/auth.interceptor';
     NewUtilisteurComponent,
     DetailUtilisateurComponent,
     ProfileComponent,
-    ChangerMotDepasseComponent
+    ChangerMotDepasseComponent,
+    SidebarComponent
   ],
   imports: [
     BrowserModule,
@@ -82,7 +104,26 @@ import { AuthInterceptor } from './auth/intercptor/auth.interceptor';
     AppRoutingModule,
     FormsModule,
     HttpClientModule,
-    RouterModule
+    RouterModule,
+    LucideAngularModule.pick({
+      LayoutDashboard,
+      TrendingUp,
+      Package,
+      ArrowLeftRight,
+      Users,
+      ShoppingCart,
+      Truck,
+      Building2,
+      Tags,
+      UserCog,
+      Boxes,
+      Sun,
+      Moon,
+      Languages,
+      LogOut,
+      Menu,
+      X
+    })
   ],
   providers: [{
     provide: HTTP_INTERCEPTORS,

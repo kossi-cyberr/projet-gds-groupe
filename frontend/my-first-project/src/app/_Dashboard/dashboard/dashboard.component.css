@@ -1,35 +1,36 @@
-.main-container
-{
-  margin: 50px;
-}
-.min-height-600{
+/* ===== Shell ===== */
+.min-height-600 {
   min-height: 600px;
-}
-.no-flex-warp{
-  flex-wrap: inherit !important;
 }
 
 /* ===== Cartes KPI ===== */
 .kpi-card {
-  transition: transform .15s ease, box-shadow .15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
 }
 .kpi-card:hover {
   transform: translateY(-3px);
-  box-shadow: 0 6px 18px rgba(0,0,0,.12);
+  box-shadow: 0 6px 18px rgb(0 0 0 / 0.12);
 }
-.border-left-primary { border-left: 4px solid #4e73df; }
-.border-left-info    { border-left: 4px solid #36b9cc; }
-.border-left-success { border-left: 4px solid #1cc88a; }
-.border-left-danger  { border-left: 4px solid #e74a3b; }
-.border-left-secondary { border-left: 4px solid #858796; }
 
 .kpi-icone {
-  width: 44px; height: 44px;
+  width: 44px;
+  height: 44px;
   border-radius: 10px;
-  display: flex; align-items: center; justify-content: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   font-size: 18px;
   flex-shrink: 0;
+  color: white;
 }
+
+/* Couleurs sémantiques via les tokens DaisyUI (var(--fallback-*)) */
+.kpi-primary   { background-color: rgb(var(--fallback-p, oklch(var(--p)))); }
+.kpi-info      { background-color: rgb(var(--fallback-in, oklch(var(--in)))); }
+.kpi-success   { background-color: rgb(var(--fallback-su, oklch(var(--su)))); }
+.kpi-danger    { background-color: rgb(var(--fallback-er, oklch(var(--er)))); }
+.kpi-secondary { background-color: rgb(var(--fallback-s, oklch(var(--s)))); }
+
 .kpi-valeur {
   font-size: 1.15rem;
   font-weight: 700;
@@ -56,16 +57,16 @@
   width: 100%;
   max-width: 34px;
   min-height: 2px;
-  background: linear-gradient(180deg, #4e73df, #224abe);
+  background: rgb(var(--fallback-p, oklch(var(--p))));
   border-radius: 4px 4px 0 0;
-  transition: height .4s ease;
+  transition: height 0.4s ease;
 }
 .chart-bar-max {
-  background: linear-gradient(180deg, #1cc88a, #13855c);
+  background: rgb(var(--fallback-su, oklch(var(--su))));
 }
 .chart-col small {
   margin-top: 4px;
-  color: #858796;
+  color: rgb(var(--fallback-bc, oklch(var(--bc))) / 0.55);
   font-size: 9px;
 }
 
@@ -73,23 +74,27 @@
 .compteur {
   font-size: 1.4rem;
   font-weight: 700;
-  color: #4e73df;
+  color: rgb(var(--fallback-p, oklch(var(--p))));
 }
 .avatar-mini {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 22px; height: 22px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: #4e73df;
-  color: #fff;
+  background: rgb(var(--fallback-p, oklch(var(--p))));
+  color: rgb(var(--fallback-pc, oklch(var(--pc))));
   font-size: 10px;
   font-weight: 700;
   margin-right: 4px;
 }
+
+/* Détails Bootstrap encore présents dans le contenu des routes : */
+/* aligner les en-têtes de cartes sur le thème */
 .card {
   border-radius: 10px;
 }
 .card-header {
-  background: #f8f9fc;
+  background: rgb(var(--fallback-b2, oklch(var(--b2))) / 0.6);
 }

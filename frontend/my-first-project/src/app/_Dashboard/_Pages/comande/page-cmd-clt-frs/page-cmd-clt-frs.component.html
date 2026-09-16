@@ -86,7 +86,7 @@
               </select>
             </div>
             <div class="col-md-4 text-center">
-              <h5 class="mb-0">Lignes : {{ lignesParCommande[commande.id!]?.length || 0 }}</h5>
+              <h5 class="mb-0">Lignes : {{ (lignesParCommande[commande.id!] || []).length }}</h5>
             </div>
             <div class="col-md-4 text-right">
               <h5 class="mb-0">Total : {{ total(commande) | number:'1.0-0' }} F</h5>

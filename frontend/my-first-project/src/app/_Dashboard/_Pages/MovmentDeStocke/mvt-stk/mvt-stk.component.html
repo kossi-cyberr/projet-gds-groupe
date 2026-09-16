@@ -28,7 +28,7 @@
                   <i class="fas fa-dollar-sign blue-color"></i>&nbsp;{{ item.article.prixUnitaire }} F HT
                 </div>
                 <div class="col-md-4 text-center">
-                  <h5 class="mb-0">Stock actuel : <b [ngClass]="{'text-danger': item.stockReel <= (item.article?.seuilAlerte ?? 0)}">{{ item.stockReel }}</b></h5>
+                  <h5 class="mb-0">Stock actuel : <b [ngClass]="{'text-danger': item.stockReel <= (item.article.seuilAlerte ?? 0)}">{{ item.stockReel }}</b></h5>
                 </div>
               </div>
             </button>
