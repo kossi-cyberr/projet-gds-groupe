@@ -15,9 +15,13 @@ export class ThemeService {
   private courant: 'clinic-light' | 'clinic-dark';
 
   constructor() {
+    // Priorité : paramètre d'URL (?theme=clinic-dark) > choix sauvegardé > préférence système
+    const parametreUrl = new URLSearchParams(window.location.search).get('theme');
     const sauvegarde = localStorage.getItem(ThemeService.STORAGE_KEY) as 'clinic-light' | 'clinic-dark' | null;
     const systemeSombre = window.matchMedia?.('(prefers-color-scheme: dark)').matches;
-    this.courant = sauvegarde ?? (systemeSombre ? ThemeService.DARK : ThemeService.LIGHT);
+    this.courant = parametreUrl === ThemeService.DARK || parametreUrl === ThemeService.LIGHT
+      ? parametreUrl
+      : sauvegarde ?? (systemeSombre ? ThemeService.DARK : ThemeService.LIGHT);
     this.appliquer();
   }
 
