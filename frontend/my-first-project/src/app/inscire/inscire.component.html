@@ -1,48 +1,111 @@
-<div class="container my-container">
-  <div class="card justify-content-md-center">
-    <div class="card-header text-center">
-     <h1>S'inscrire</h1>
+<div class="flex min-h-screen items-center justify-center bg-base-200 px-4 py-10">
+  <div class="w-full max-w-2xl">
+    <div class="mb-3 flex justify-end gap-1">
+      <button type="button" class="btn btn-ghost btn-sm btn-circle"
+              (click)="basculerTheme()"
+              [attr.aria-label]="estSombre ? 'Activer le thème clair' : 'Activer le thème sombre'"
+              [title]="estSombre ? 'Thème clair' : 'Thème sombre'">
+        <i-lucide [name]="estSombre ? 'sun' : 'moon'" size="18"></i-lucide>
+      </button>
+      <button type="button" class="btn btn-ghost btn-sm gap-1.5" (click)="basculerLangue()" aria-label="Changer la langue" title="Français / English">
+        <i-lucide name="languages" size="18"></i-lucide>
+        <span class="text-xs font-semibold uppercase">{{ langueCourante }}</span>
+      </button>
     </div>
-    <div class="card-body">
-      <div class="alert alert-danger" *ngIf="errorsMsg.length > 0">
-        <div *ngFor="let msg of errorsMsg">
-          <span >{{msg}}</span>
+
+    <div class="card bg-base-100 shadow-xl">
+      <div class="card-body">
+        <div class="mb-4 flex items-center gap-3">
+          <div class="flex h-11 w-11 items-center justify-center rounded-xl bg-primary text-primary-content">
+            <i-lucide name="building-2" size="24"></i-lucide>
+          </div>
+          <div>
+            <h1 class="mb-0 text-lg font-bold">Créer votre espace</h1>
+            <p class="mb-0 text-xs text-base-content/50">Enregistrez votre entreprise pour commencer</p>
+          </div>
         </div>
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Nom" [(ngModel)]="entrepriseDto.nom">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Code fiscale" [(ngModel)]="entrepriseDto.codefiscale">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="E-mail" [(ngModel)]="entrepriseDto.email">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Adresse 1" [(ngModel)]="adresse.addresse1">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Adresse 2" [(ngModel)]="adresse.addresse2">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Ville" [(ngModel)]="adresse.Ville">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Code postal" [(ngModel)]="adresse.codePostale">
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control"  placeholder="Pays" [(ngModel)]="adresse.pays">
-      </div>
-      <div class="mb-3">
-        <textarea type="text" class="form-control" placeholder="Description" [(ngModel)]="entrepriseDto.description"></textarea>
-      </div>
-      <div class="mb-3">
-        <input type="text" class="form-control" placeholder="Numero de telephone" [(ngModel)]="entrepriseDto.numTel">
-      </div>
-      <div class="mb-3 d-flex justify-content-between">
-        <a [routerLink]="['/login']" class="btn btn-link">Se connecter</a>
-        <button type="button" class="btn btn-primary" (click)="inscrire()"><i class="fas fa-check"></i>&nbsp; S'inscire</button>
+
+        <div class="alert alert-error py-2 text-sm" *ngIf="errorsMsg.length > 0" role="alert">
+          <i class="fas fa-circle-exclamation"></i>
+          <div>
+            <div *ngFor="let msg of errorsMsg">{{msg}}</div>
+          </div>
+        </div>
+
+        <form (ngSubmit)="inscrire()" #formulaire="ngForm">
+          <fieldset class="mb-2">
+            <legend class="section-title mb-2">Entreprise</legend>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div class="form-control">
+                <label class="label py-1" for="ins-nom"><span class="label-text font-medium">Nom de l'entreprise *</span></label>
+                <input id="ins-nom" type="text" class="input input-bordered w-full" name="nom"
+                       placeholder="Clinique Exemple" [(ngModel)]="entrepriseDto.nom" required>
+              </div>
+              <div class="form-control">
+                <label class="label py-1" for="ins-fisc"><span class="label-text font-medium">Code fiscal *</span></label>
+                <input id="ins-fisc" type="text" class="input input-bordered w-full" name="codefiscale"
+                       placeholder="CF-2026-001" [(ngModel)]="entrepriseDto.codefiscale" required>
+              </div>
+              <div class="form-control">
+                <label class="label py-1" for="ins-email"><span class="label-text font-medium">E-mail *</span></label>
+                <input id="ins-email" type="email" class="input input-bordered w-full" name="email"
+                       placeholder="contact@clinique.com" autocomplete="email" [(ngModel)]="entrepriseDto.email" required>
+              </div>
+              <div class="form-control">
+                <label class="label py-1" for="ins-tel"><span class="label-text font-medium">Téléphone *</span></label>
+                <input id="ins-tel" type="tel" class="input input-bordered w-full" name="numTel"
+                       placeholder="+228 90 00 00 00" autocomplete="tel" [(ngModel)]="entrepriseDto.numTel" required>
+              </div>
+              <div class="form-control sm:col-span-2">
+                <label class="label py-1" for="ins-desc"><span class="label-text font-medium">Description</span></label>
+                <textarea id="ins-desc" class="textarea textarea-bordered w-full" name="description" rows="2"
+                          placeholder="Activité de l'entreprise…" [(ngModel)]="entrepriseDto.description"></textarea>
+              </div>
+            </div>
+          </fieldset>
+
+          <fieldset class="mb-4">
+            <legend class="section-title mb-2">Adresse</legend>
+            <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <div class="form-control">
+                <label class="label py-1" for="ins-ad1"><span class="label-text font-medium">Adresse 1 *</span></label>
+                <input id="ins-ad1" type="text" class="input input-bordered w-full" name="addresse1"
+                       placeholder="1 rue de la Santé" [(ngModel)]="adresse.addresse1" required>
+              </div>
+              <div class="form-control">
+                <label class="label py-1" for="ins-ad2"><span class="label-text font-medium">Adresse 2</span></label>
+                <input id="ins-ad2" type="text" class="input input-bordered w-full" name="addresse2"
+                       placeholder="Bâtiment, étage…" [(ngModel)]="adresse.addresse2">
+              </div>
+              <div class="form-control">
+                <label class="label py-1" for="ins-ville"><span class="label-text font-medium">Ville *</span></label>
+                <input id="ins-ville" type="text" class="input input-bordered w-full" name="Ville"
+                       placeholder="Lomé" [(ngModel)]="adresse.Ville" required>
+              </div>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="form-control">
+                  <label class="label py-1" for="ins-cp"><span class="label-text font-medium">Code postal</span></label>
+                  <input id="ins-cp" type="text" class="input input-bordered w-full" name="codePostale"
+                         placeholder="00000" [(ngModel)]="adresse.codePostale">
+                </div>
+                <div class="form-control">
+                  <label class="label py-1" for="ins-pays"><span class="label-text font-medium">Pays *</span></label>
+                  <input id="ins-pays" type="text" class="input input-bordered w-full" name="pays"
+                         placeholder="Togo" [(ngModel)]="adresse.pays" required>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <div class="flex flex-col-reverse items-stretch gap-2 sm:flex-row sm:items-center sm:justify-between">
+            <a [routerLink]="['/login']" class="link link-hover text-sm">Déjà un compte ? Se connecter</a>
+            <button type="submit" class="btn btn-primary" [disabled]="chargement || formulaire.invalid">
+              <span *ngIf="chargement" class="loading loading-spinner loading-sm"></span>
+              <span>{{ chargement ? 'Création…' : 'Créer mon espace' }}</span>
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>
-  </div>
+</div>
