@@ -59,7 +59,7 @@ public class ArticleServiceImpl implements ArticleService {
     public ArticleDto save(ArticleDto articleDto) {
         List<String> errors = ArticleValidator.validate(articleDto);
         if (!errors.isEmpty()) {
-            log.error("Article is not valid {0}", articleDto);
+            log.error("Article is not valid {}", articleDto);
             throw new InvalidEntityException("l'article n'est pas valide", ErrorCodes.ARTICLE_NOT_VALID, errors);
         }
         Long idCategory = articleDto.getCategory().getId();

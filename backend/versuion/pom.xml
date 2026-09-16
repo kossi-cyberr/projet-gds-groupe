@@ -18,6 +18,9 @@
 
 	<properties>
 		<java.version>17</java.version>
+		<!-- Surcharge de la version gérée par Spring Boot 3.3.5 : nécessaire
+		     pour la compatibilité avec les JDK récents (25/26) en dev local. -->
+		<lombok.version>1.18.42</lombok.version>
 	</properties>
 
 	<dependencies>
@@ -140,6 +143,22 @@
 
 	<build>
 		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<configuration>
+					<!-- Depuis JDK 23+ l'annotation processing est désactivé par défaut :
+					     -proc:full le réactive explicitement (requis par Lombok). -->
+					<proc>full</proc>
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>

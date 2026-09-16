@@ -38,7 +38,7 @@ public class ClientServiceImpl implements ClientService {
     public ClientDto save(ClientDto dto) {
         List<String> errors = ClientValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("Client is not valid {0}", dto);
+            log.error("Client is not valid {}", dto);
             throw new InvalidEntityException("Le client n'est pas valide", ErrorCodes.CLIENT_NOT_VALID, errors);
         }
         // Forcer l'entreprise courante (filtrage multi-entreprise)
@@ -53,7 +53,7 @@ public class ClientServiceImpl implements ClientService {
     public ClientDto update(Long id, ClientDto dto) {
         List<String> errors = ClientValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("Client is not valid {0}", dto);
+            log.error("Client is not valid {}", dto);
             throw new InvalidEntityException("Le client n'est pas valide", ErrorCodes.CLIENT_NOT_VALID, errors);
         }
         ClientDto existant = findById(id);

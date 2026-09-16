@@ -42,7 +42,7 @@ public class EntrepriseServiceImpl implements EntrepriseService {
     public EntrepriseDto save(EntrepriseDto dto) {
         List<String> errors = EntrepriseValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("Entreprise is not valid {0}", dto);
+            log.error("Entreprise is not valid {}", dto);
             throw new InvalidEntityException("L'entreprise n'est pas valide", ErrorCodes.ENTREPRISE_NOT_VALID, errors);
         }
         EntrepriseDto savedEntreprise = EntrepriseDto.fromEntity(

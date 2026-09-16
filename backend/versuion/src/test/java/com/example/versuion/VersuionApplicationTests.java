@@ -30,10 +30,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
  * Tests d'intégration de bout en bout : une vraie base PostgreSQL (Testcontainers),
  * le contexte Spring complet (Flyway + JPA + Security 6 + Springdoc) et l'API REST
  * authentifiée par JWT.
+ *
+ * Ignorés automatiquement lorsqu'aucun environnement Docker n'est disponible
+ * (ex. poste de dev sans Docker) afin de ne pas bloquer `mvn test`.
  */
 @SpringBootTest
 @AutoConfigureMockMvc
-@Testcontainers
+@Testcontainers(disabledWithoutDocker = true)
 class VersuionApplicationTests {
 
     private static final String MOT_DE_PASSE_ADMIN_DEFAUT = "Admin123!";

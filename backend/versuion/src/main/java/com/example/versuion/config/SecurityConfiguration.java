@@ -36,9 +36,7 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/actuator/health",
                                 "/gestiondestock/auth/authentification",
-                                "/gestiondestock/articles/create",
                                 "/gestiondestock/entreprises/create",
-                                "/gestiondestock/categories/**",
                                 "/photos/**",
                                 "/v2/api-docs",
                                 "/swagger-resources",

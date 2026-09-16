@@ -35,7 +35,7 @@ public class CategoryServiceImpl implements CategoryService {
     public CategoryDto save(CategoryDto categoryDto) {
         List<String> errors = CategoryValidator.validate(categoryDto);
         if (!errors.isEmpty()) {
-            log.error("Category is not valid {0}", categoryDto);
+            log.error("Category is not valid {}", categoryDto);
             throw new InvalidEntityException("La category n'est pas valide", ErrorCodes.CATEGORY_NOT_VALID, errors);
         }
         // Forcer l'entreprise courante (filtrage multi-entreprise)

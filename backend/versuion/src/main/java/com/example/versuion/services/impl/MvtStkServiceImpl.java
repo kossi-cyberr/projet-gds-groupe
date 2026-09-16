@@ -82,7 +82,7 @@ public class MvtStkServiceImpl implements MvtStkService {
         }
         List<String> errors = MvtStkValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("MvtStk is not valid {0}", dto);
+            log.error("MvtStk is not valid {}", dto);
             throw new InvalidEntityException("Le mouvement du stock n'est pas valide", ErrorCodes.MVT_STK_NOT_VALID, errors);
         }
         dto.setQuantite(
@@ -107,7 +107,7 @@ public class MvtStkServiceImpl implements MvtStkService {
         }
         List<String> errors = MvtStkValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("MvtStk is not valid {0}", dto);
+            log.error("MvtStk is not valid {}", dto);
             throw new InvalidEntityException("Le mouvement du stock n'est pas valide", ErrorCodes.MVT_STK_NOT_VALID, errors);
         }
         dto.setQuantite(

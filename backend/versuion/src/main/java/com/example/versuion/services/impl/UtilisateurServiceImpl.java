@@ -60,7 +60,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     public UtilisateurDto save(UtilisateurDto dto) {
         List<String> errors = UtilisateursValidator.validate(dto);
         if (!errors.isEmpty()) {
-            log.error("Utilisateur is not valid {0}", dto);
+            log.error("Utilisateur is not valid {}", dto);
             throw new InvalidEntityException("L'utilisateur n'est pas valide", ErrorCodes.UTILISATEUR_NOT_VALID, errors);
         }
         if (userAlreadyExists(dto.getEmail())) {
@@ -126,7 +126,7 @@ public class UtilisateurServiceImpl implements UtilisateurService {
     @Override
     @Transactional(readOnly = true)
     public UtilisateurDto findByEmail(String email) {
-        return utilisateurRepository.findByEmail(email)
+        return utilisateurRepository.findByEmailTenant(email)
                 .map(UtilisateurDto::fromEntity)
                 .orElseThrow(() -> new EntityNotFoundException(
                         "Aucun utilisateur avec l'email = " + email + " n'a ete trouve dans la BDD",
