@@ -30,6 +30,8 @@ services:
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
       PHOTOS_DIR: /app/photos
+      # Origines des frontends autorisées par le CORS (Angular :4200, Next :3009)
+      APP_CORS_ALLOWED_ORIGINS: http://localhost:4200,http://localhost:3009
     volumes:
       - photos_data:/app/photos
     ports:

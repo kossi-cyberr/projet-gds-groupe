@@ -16,11 +16,12 @@ public class CorsConfiguration {
     private static final String PATCH = "PATCH";
 
     /**
-     * Origines autorisees pour le CORS. Par defaut : localhost (dev).
+     * Origines autorisees pour le CORS. Par defaut : localhost (dev)
+     * (Angular :4200, Next.js :3009, autre front :3000).
      * En production, definir APP_CORS_ALLOWED_ORIGINS, ex.:
      * APP_CORS_ALLOWED_ORIGINS=https://stockflow.exemple.com,https://www.exemple.com
      */
-    @Value("${app.cors.allowed-origins:http://localhost:3000}")
+    @Value("${app.cors.allowed-origins:http://localhost:3000,http://localhost:4200,http://localhost:3009}")
     private String allowedOrigins;
 
 
