@@ -91,7 +91,7 @@ Sécurité : `/photos/**` ajouté aux routes publiques (affichage par `<img>` sa
 - Recherche globale d'articles dans le header (suggestions + redirection `/articles?q=`).
 - Dashboard d'accueil enrichi (KPI, graphiques CSS, top articles/clients, alertes).
 
-## 6. Frontend Next.js (StockFlow)
+## 6. Frontend Next.js (STOCK-HUB)
 
 - Page **`/profil`** complète : lecture `GET /auth/me`, édition `PUT /utilisateurs/me`,
   upload photo (`uploadFile` dans `lib/api.ts`), toasts de confirmation.

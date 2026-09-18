@@ -140,10 +140,10 @@ npm run dev        # http://localhost:3000 (adapter NEXT_PUBLIC_API_BASE si beso
    ```bash
    bash scripts/seed-demo.sh
    ```
-   Il crée l'entreprise *StockFlow Démo SARL* (`demo@stockflow.com` / `Admin123!`),
+   Il crée l'entreprise *STOCK-HUB Démo SARL* (`demo@stock-hub.com` / `Admin123!`),
    5 catégories, 12 articles, 4 clients, 3 fournisseurs, commandes, ventes et mouvements.
 3. Compte démo utilisé dans la documentation :
-   - **admin@stockflow-demo.com** / **Admin123!** (entreprise 152)
+   - **admin@stock-hub-demo.com** / **Admin123!** (entreprise 152)
 
 ---
 

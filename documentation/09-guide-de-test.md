@@ -18,7 +18,7 @@ cd backend/versuion && mvn test
 
 | Compte | Mot de passe | Entreprise | Rôle |
 |---|---|---|---|
-| `admin@stockflow-demo.com` | `Admin123!` | 152 — StockFlow Démo SARL | ADMIN |
+| `admin@stock-hub-demo.com` | `Admin123!` | 152 — STOCK-HUB Démo SARL | ADMIN |
 | `achille.mballa@novatra-distribution.cm` | (seed E2E) | 900 — NOVATRA DISTRIBUTION SA | ADMIN |
 
 > Les données étant isolées par entreprise, connectez-vous avec le bon compte pour voir
@@ -30,7 +30,7 @@ cd backend/versuion && mvn test
 BASE=http://localhost:8089/gestiondestock
 TOKEN=$(curl -s -X POST $BASE/auth/authentification \
   -H 'Content-Type: application/json' \
-  -d '{"login":"admin@stockflow-demo.com","password":"Admin123!"}' \
+  -d '{"login":"admin@stock-hub-demo.com","password":"Admin123!"}' \
   | python3 -c "import sys,json;print(json.load(sys.stdin)['accessToken'])")
 AUTH="Authorization: Bearer $TOKEN"
 ```

@@ -19,7 +19,7 @@ public class CorsConfiguration {
      * Origines autorisees pour le CORS. Par defaut (dev) : tout localhost ou
      * 127.0.0.1, quel que soit le port (Angular :4200, Next.js :3009, etc.).
      * En production, definir APP_CORS_ALLOWED_ORIGINS avec des origines exactes, ex.:
-     * APP_CORS_ALLOWED_ORIGINS=https://stockflow.exemple.com,https://www.exemple.com
+     * APP_CORS_ALLOWED_ORIGINS=https://stock-hub.exemple.com,https://www.exemple.com
      */
     @Value("${app.cors.allowed-origins:http://localhost:*,http://127.0.0.1:*}")
     private String allowedOrigins;

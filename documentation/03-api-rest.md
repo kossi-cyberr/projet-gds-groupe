@@ -20,7 +20,7 @@ Base locale : `http://localhost:8089/gestiondestock`
 # Connexion
 curl -X POST http://localhost:8089/gestiondestock/auth/authentification \
   -H 'Content-Type: application/json' \
-  -d '{"login":"admin@stockflow-demo.com","password":"Admin123!"}'
+  -d '{"login":"admin@stock-hub-demo.com","password":"Admin123!"}'
 ```
 
 ---

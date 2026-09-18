@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
-    <string name="app_name">kossiStock</string>
-    <string name="title_activity_main">kossiStock</string>
+    <string name="app_name">STOCK-HUB</string>
+    <string name="title_activity_main">STOCK-HUB</string>
     <string name="package_name">com.kfokam48.stock</string>
     <string name="custom_url_scheme">com.kfokam48.stock</string>
 </resources>

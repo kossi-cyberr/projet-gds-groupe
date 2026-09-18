@@ -10,7 +10,7 @@ export type Langue = 'fr' | 'en';
 const DICO: Record<Langue, Record<string, string>> = {
   fr: {
     'app.clinic': 'Gestion de stock',
-    'app.brand': 'Clinique',
+    'app.brand': 'STOCK-HUB',
     'app.logout': 'Déconnexion',
     'section.pilotage': 'Pilotage',
     'section.gestion': 'Gestion',
@@ -42,7 +42,7 @@ const DICO: Record<Langue, Record<string, string>> = {
   },
   en: {
     'app.clinic': 'Inventory management',
-    'app.brand': 'Clinic',
+    'app.brand': 'STOCK-HUB',
     'app.logout': 'Sign out',
     'section.pilotage': 'Overview',
     'section.gestion': 'Management',

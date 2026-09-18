@@ -205,6 +205,6 @@ lib/types.ts              # Types TypeScript alignés sur les DTOs backend
 ## 11. Pourquoi deux frontends ?
 
 - Le projet Angular est le **back-office historique** : complet mais au design classique.
-- StockFlow (Next.js) est la **nouvelle interface** : même API, UX modernisée, composants réutilisables.
+- STOCK-HUB (Next.js) est la **nouvelle interface** : même API, UX modernisée, composants réutilisables.
 - Ils cohabitent volontairement : le backend ne fait la distinction d'aucune façon, ce qui
   permet de migrer progressivement page par page sans rupture.

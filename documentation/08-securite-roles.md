@@ -9,7 +9,7 @@
 
 | Claim | Contenu | Exemple |
 |---|---|---|
-| `sub` | email de l'utilisateur | `admin@stockflow-demo.com` |
+| `sub` | email de l'utilisateur | `admin@stock-hub-demo.com` |
 | `iat` | émis à | `1789554883` |
 | `exp` | expire à (8 h par défaut) | `1789583683` |
 | `idEntreprise` | **tenant** de l'utilisateur | `152` |

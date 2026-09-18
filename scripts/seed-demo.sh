@@ -12,12 +12,12 @@ putA() { curl -s -X PUT "$BASE$1" -H "$CT" -H "Authorization: Bearer $TOKEN"; }
 
 echo "== 1. Entreprise =="
 post /entreprises/create '{
-  "nom":"StockFlow Démo SARL","description":"Entreprise de démonstration","codefiscale":"CF-2026-001",
-  "email":"demo@stockflow.com","numTel":"+22890000001","siteWeb":"https://stockflow.app",
+  "nom":"STOCK-HUB Démo SARL","description":"Entreprise de démonstration","codefiscale":"CF-2026-001",
+  "email":"demo@stock-hub.com","numTel":"+22890000001","siteWeb":"https://stock-hub.app",
   "adresse":{"addresse1":"12 Boulevard du 13 Janvier","addresse2":"Immeuble Kossi","Ville":"Lomé","codePostale":"00000","pays":"Togo"}}' | jget "['id']"
 
 echo "== 2. Login =="
-TOKEN=$(curl -s -X POST "$BASE/auth/authentification" -H "$CT" -d '{"login":"demo@stockflow.com","password":"'$PW'"}' | python3 -c "import sys,json;print(json.load(sys.stdin)['accessToken'])")
+TOKEN=$(curl -s -X POST "$BASE/auth/authentification" -H "$CT" -d '{"login":"demo@stock-hub.com","password":"'$PW'"}' | python3 -c "import sys,json;print(json.load(sys.stdin)['accessToken'])")
 echo "Token OK: ${TOKEN:0:16}..."
 
 C() { postA /categories/create "{\"codeCategory\":\"$1\",\"designation\":\"$2\"}" | jget "['id']"; }
@@ -90,7 +90,7 @@ postA /mvtstk/entree '{"article":{"id":11},"quantite":5}' >/dev/null
 postA /mvtstk/entree '{"article":{"id":12},"quantite":200}' >/dev/null
 
 echo "== 10. Utilisateur VENDEUR =="
-USERID=$(post /utilisateurs/create '{"nom":"Sena","prenom":"Afi","email":"afi@stockflow.com","motDePasse":"'$PW'","dateDeNaissance":"1992-05-14","entreprise":{"id":1},"adresse":{"addresse1":"2 Rue des Cocotiers","Ville":"Lomé","codePostale":"00000","pays":"Togo"}}' | grep -o 'id=[0-9]*' | head -1 | cut -d= -f2)
+USERID=$(post /utilisateurs/create '{"nom":"Sena","prenom":"Afi","email":"afi@stock-hub.com","motDePasse":"'$PW'","dateDeNaissance":"1992-05-14","entreprise":{"id":1},"adresse":{"addresse1":"2 Rue des Cocotiers","Ville":"Lomé","codePostale":"00000","pays":"Togo"}}' | grep -o 'id=[0-9]*' | head -1 | cut -d= -f2)
 echo "Vendeur id=$USERID"
 putA "/utilisateurs/roles/$USERID/VENDEUR" >/dev/null
 

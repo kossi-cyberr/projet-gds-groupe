@@ -1,6 +1,6 @@
-# 📚 Documentation — Gestion de Stock (StockFlow)
+# 📚 Documentation — Gestion de Stock (STOCK-HUB)
 
-Bienvenue dans la documentation complète du projet **Gestion de Stock** (a.k.a. *StockFlow*),
+Bienvenue dans la documentation complète du projet **Gestion de Stock** (a.k.a. *STOCK-HUB*),
 une application de gestion d'inventaire, de ventes et de commandes **multi-entreprises**.
 
 ## 🗂️ Contenu du dossier
@@ -31,7 +31,7 @@ une application de gestion d'inventaire, de ventes et de commandes **multi-entre
 | Service | URL |
 |---|---|
 | Frontend Angular | http://localhost:4200 |
-| Frontend Next.js (StockFlow) | http://localhost:3009 |
+| Frontend Next.js (STOCK-HUB) | http://localhost:3009 |
 | API Backend | http://localhost:8089/gestiondestock |
 | **Adminer (gestion BDD)** | http://localhost:8081 |
 | Swagger UI | http://localhost:8089/swagger-ui/index.html |
