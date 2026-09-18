@@ -19,6 +19,8 @@ import { NewUtilisteurComponent } from './_Dashboard/_Pages/utilisateurs/new-uti
 import { ProfileComponent } from './_Dashboard/_Pages/profile/profile/profile.component';
 import { ChangerMotDepasseComponent } from './_Dashboard/_Pages/profile/changer-mot-depasse/changer-mot-depasse.component';
 import { ApplicationGuard } from './auth/application.guard';
+import { PageVentesComponent } from './_Dashboard/_Pages/ventes/page-ventes/page-ventes.component';
+import { NewVenteComponent } from './_Dashboard/_Pages/ventes/new-vente/new-vente.component';
 
 
 const routes: Routes = [
@@ -114,6 +116,8 @@ const routes: Routes = [
         }
       },
 
+      { path: "ventes", component: PageVentesComponent },
+      { path: "newvente", component: NewVenteComponent },
       { path: "utilisateur", component: UtilisateursComponent },
       { path: "newutilisateur", component: NewUtilisteurComponent },
       { path: "profile", component: ProfileComponent },

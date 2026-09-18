@@ -19,6 +19,7 @@ export class DashboardComponent implements OnInit {
   moisLabel = MOIS_LABELS;
   anneeCourante = new Date().getFullYear();
   utilisateur: any = {};
+  estVendeur = false;
 
   /** État du tiroir de navigation mobile. */
   menuMobileOuvert = false;
@@ -33,7 +34,13 @@ export class DashboardComponent implements OnInit {
 
   ngOnInit(): void {
     this.utilisateur = this.userService.getConnectedUser();
+    this.estVendeur = this.isVendeur();
     this.charger();
+  }
+
+  private isVendeur(): boolean {
+    const roles = this.utilisateur?.roles ?? [];
+    return roles.length === 1 && roles[0]?.rolename === 'VENDEUR';
   }
 
   charger(): void {

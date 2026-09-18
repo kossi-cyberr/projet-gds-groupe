@@ -3,6 +3,7 @@ import { Router, NavigationEnd, Event as RouterEvent } from '@angular/router';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { LanguageService } from 'src/app/services/language.service';
+import { UserService } from 'src/app/services/user.service';
 
 interface ItemMenu {
   id: string;
@@ -50,7 +51,8 @@ export class SidebarComponent implements OnInit, OnDestroy {
         { id: 'clients', cle: 'nav.clients', url: 'client', icone: 'users' },
         { id: 'cmd-clients', cle: 'nav.cmdClients', url: 'commandeclient', icone: 'shopping-cart' },
         { id: 'fournisseurs', cle: 'nav.fournisseurs', url: 'fournisseurs', icone: 'truck' },
-        { id: 'cmd-fournisseurs', cle: 'nav.cmdFournisseurs', url: 'commandefournissuer', icone: 'building-2' }
+        { id: 'cmd-fournisseurs', cle: 'nav.cmdFournisseurs', url: 'commandefournissuer', icone: 'building-2' },
+        { id: 'ventes', cle: 'nav.ventes', url: 'ventes', icone: 'receipt' }
       ]
     },
     {
@@ -66,12 +68,17 @@ export class SidebarComponent implements OnInit, OnDestroy {
   /** Route courante (pour l'état actif des liens). */
   urlCourante = '';
 
+  /** Vrai si l'utilisateur connecté est un simple vendeur. */
+  estVendeur = false;
+
   constructor(
     private router: Router,
-    public langueService: LanguageService
+    public langueService: LanguageService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
+    this.estVendeur = this.isVendeur();
     this.urlCourante = this.router.url;
     this.router.events
       .pipe(
@@ -104,5 +111,40 @@ export class SidebarComponent implements OnInit, OnDestroy {
   /** Traduction directe d'une clé dans le template. */
   t(cle: string): string {
     return this.langueService.t(cle);
+  }
+
+  /** Vérifie si l'utilisateur connecté a le rôle VENDEUR uniquement. */
+  private isVendeur(): boolean {
+    const user = this.userService.getConnectedUser();
+    const roles = user?.roles ?? [];
+    return roles.length === 1 && roles[0]?.rolename === 'VENDEUR';
+  }
+
+  /** Retourne les sections visibles selon le rôle. */
+  get sectionsVisibles(): SectionMenu[] {
+    if (!this.estVendeur) {
+      return this.sections;
+    }
+    return this.sections
+      .map(section => {
+        if (section.id === 'systeme') {
+          // Vendeur ne voit pas les utilisateurs
+          return {
+            ...section,
+            items: section.items.filter(item => item.id !== 'utilisateurs')
+          };
+        }
+        if (section.id === 'gestion') {
+          // Vendeur ne voit pas les fournisseurs ni commandes fournisseurs
+          return {
+            ...section,
+            items: section.items.filter(item =>
+              item.id !== 'fournisseurs' && item.id !== 'cmd-fournisseurs'
+            )
+          };
+        }
+        return section;
+      })
+      .filter(section => section.items.length > 0);
   }
 }

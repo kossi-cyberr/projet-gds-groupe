@@ -1,0 +1,106 @@
+<div class="col">
+  <div class="row m-3">
+    <div class="col-md-8 p-0">
+      <h1>Ventes</h1>
+      <p class="text-muted">Le stock est déduit automatiquement à chaque vente.</p>
+    </div>
+    <div class="col-md-4 text-right">
+      <app-button-action (clickEvent)="nouvelleVente()" [isExporterVisible]="false"></app-button-action>
+    </div>
+  </div>
+  <div class="col m-3">
+    <div class="alert alert-danger" *ngIf="errorMsg">{{ errorMsg }}</div>
+    <p class="text-muted" *ngIf="chargement">Chargement…</p>
+    <p class="text-muted" *ngIf="!chargement && ventes.length === 0">Aucune vente enregistrée.</p>
+
+    <div class="accordion" id="accordionVentes">
+      <div class="card" *ngFor="let vente of ventes; let i = index">
+        <div class="card-body">
+          <button class="btn btn-block text-left" type="button" data-bs-toggle="collapse"
+                  [attr.data-bs-target]="'#collapseVente' + vente.id" aria-expanded="false"
+                  [attr.aria-controls]="'collapseVente' + vente.id">
+
+            <div class="row w-100">
+              <div class="col-md-1 text-center">
+                <div class="rounded-circle bg-success text-white d-inline-flex align-items-center justify-content-center"
+                     style="width:60px;height:60px;font-size:18px;font-weight:bold;">
+                  <i class="fas fa-receipt"></i>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div><i class="fas fa-qrcode blue-color"></i>&nbsp;{{ vente.code }}</div>
+                <div><i class="fas fa-calendar-check blue-color"></i>&nbsp;{{ formaterDate(vente.dateVente) }}</div>
+              </div>
+              <div class="col-md-4">
+                <div><i class="fas fa-comment blue-color"></i>&nbsp;{{ vente.commentaire || '—' }}</div>
+                <div><span class="badge badge-success">{{ totalLignes(vente) }} ligne{{ totalLignes(vente) > 1 ? 's' : '' }}</span></div>
+              </div>
+              <div class="col-md-3 text-right" *ngIf="!estVendeur">
+                <button type="button" class="btn btn-link text-danger" data-bs-toggle="modal"
+                        [attr.data-bs-target]="'#modalDeleteVente' + vente.id" (click)="$event.stopPropagation()">
+                  <i class="fas fa-trash-alt"></i>&nbsp;Supprimer
+                </button>
+              </div>
+            </div>
+          </button>
+        </div>
+
+        <!-- Détail des lignes -->
+        <div [attr.id]="'collapseVente' + vente.id" class="collapse" data-bs-parent="#accordionVentes"
+             style="max-height: 300px; overflow-y: scroll">
+          <div class="card-body">
+            <p class="text-muted" *ngIf="!vente.ligneVentes?.length">Aucune ligne pour cette vente.</p>
+            <div class="row custom-border p-2 mb-1 font-weight-bold" *ngIf="vente.ligneVentes?.length">
+              <div class="col-md-4">Article</div>
+              <div class="col-md-3 text-center">Désignation</div>
+              <div class="col-md-2 text-center">Quantité</div>
+              <div class="col-md-3 text-center">Prix unitaire</div>
+            </div>
+            <div class="row custom-border p-2 mb-1" *ngFor="let ligne of vente.ligneVentes">
+              <div class="col-md-4">{{ ligne.article?.codeArticle }}</div>
+              <div class="col-md-3">{{ ligne.article?.designation }}</div>
+              <div class="col-md-2 text-center">{{ ligne.quantite }}</div>
+              <div class="col-md-3 text-center">{{ ligne.prixUnitaire }} F</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card-footer">
+          <div class="row align-items-center">
+            <div class="col-md-6">
+              <span class="text-muted">Lignes : {{ totalLignes(vente) }}</span>
+            </div>
+            <div class="col-md-6 text-right">
+              <h5 class="mb-0">Total : {{ totalMontant(vente) | number:'1.0-0' }} F</h5>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modals de suppression (une par vente) -->
+<div class="modal fade" *ngFor="let vente of ventes"
+     [attr.id]="'modalDeleteVente' + vente.id" data-bs-backdrop="static" data-bs-keyboard="false"
+     tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Confirmation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Êtes-vous sûr de vouloir supprimer la vente {{ vente.code }} ?
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fas fa-ban"></i>&nbsp;Annuler
+        </button>
+        <button type="button" class="btn btn-danger" data-bs-dismiss="modal" (click)="supprimer(vente)">
+          <i class="fas fa-trash-alt"></i>&nbsp;Supprimer
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

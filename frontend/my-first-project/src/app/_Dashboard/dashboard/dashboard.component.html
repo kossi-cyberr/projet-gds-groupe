@@ -131,7 +131,7 @@
                   <div class="compteur">{{data.nombreClients}}</div>
                   <small class="text-base-content/60"><i class="fas fa-users"></i> Clients</small>
                 </div>
-                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/fournisseurs">
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/fournisseurs" *ngIf="!estVendeur">
                   <div class="compteur">{{data.nombreFournisseurs}}</div>
                   <small class="text-base-content/60"><i class="fas fa-truck"></i> Fournisseurs</small>
                 </div>
@@ -143,7 +143,7 @@
                   <div class="compteur">{{data.nombreCommandesClient}}</div>
                   <small class="text-base-content/60"><i class="fas fa-basket-shopping"></i> Cmd clients</small>
                 </div>
-                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/commandefournissuer">
+                <div class="cursor-pointer rounded-lg p-2 transition hover:bg-base-200" routerLink="/commandefournissuer" *ngIf="!estVendeur">
                   <div class="compteur">{{data.nombreCommandesFournisseur}}</div>
                   <small class="text-base-content/60"><i class="fas fa-truck-ramp-box"></i> Cmd fournisseurs</small>
                 </div>
@@ -153,8 +153,9 @@
               <div class="card-header py-2.5 font-semibold">⚡ Actions rapides</div>
               <div class="card-body flex flex-col justify-around gap-2 py-3">
                 <button class="btn btn-primary btn-sm" (click)="nouvelleVente()"><i class="fas fa-plus"></i> Nouvelle commande client</button>
+                <button class="btn btn-success btn-sm" routerLink="/newvente"><i class="fas fa-receipt"></i> Nouvelle vente</button>
                 <button class="btn btn-outline btn-sm" (click)="nouvelArticle()"><i class="fas fa-box-open"></i> Nouvel article</button>
-                <button class="btn btn-success btn-sm" (click)="nouveauClient()"><i class="fas fa-user-plus"></i> Nouveau client</button>
+                <button class="btn btn-success btn-sm" (click)="nouveauClient()" *ngIf="!estVendeur"><i class="fas fa-user-plus"></i> Nouveau client</button>
               </div>
             </div>
           </div>

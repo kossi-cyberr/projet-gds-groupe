@@ -41,6 +41,8 @@ import { AuthInterceptor } from './auth/intercptor/auth.interceptor';
 import { SidebarComponent } from './_Dashboard/components/sidebar/sidebar.component';
 import { DataTableComponent } from './_Dashboard/components/data-table/data-table.component';
 import { ConfirmDialogComponent } from './_Dashboard/components/confirm-dialog/confirm-dialog.component';
+import { PageVentesComponent } from './_Dashboard/_Pages/ventes/page-ventes/page-ventes.component';
+import { NewVenteComponent } from './_Dashboard/_Pages/ventes/new-vente/new-vente.component';
 import {
   LucideAngularModule,
   LayoutDashboard,
@@ -59,7 +61,8 @@ import {
   Languages,
   LogOut,
   Menu,
-  X
+  X,
+  Receipt
 } from 'lucide-angular';
 @NgModule({
   declarations: [
@@ -95,7 +98,9 @@ import {
     ChangerMotDepasseComponent,
     SidebarComponent,
     DataTableComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    PageVentesComponent,
+    NewVenteComponent
   ],
   imports: [
     BrowserModule,
@@ -122,7 +127,8 @@ import {
       Languages,
       LogOut,
       Menu,
-      X
+      X,
+      Receipt
     })
   ],
   providers: [{
